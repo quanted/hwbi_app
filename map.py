@@ -3,7 +3,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 import importlib
 import links_left
 import os
-import secret
 from django.conf import settings
 from django.shortcuts import redirect
 from hwbi_app import views
