@@ -52,6 +52,7 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
+settings_local.py
 
 # Flask stuff:
 instance/
@@ -87,3 +88,12 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# QED settings
+secret_key_django_dropbox.txt
+
+# DB stuff
+*.sqlite3
+
+#Visual Studio stuff
+migrations/
