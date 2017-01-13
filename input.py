@@ -2,7 +2,7 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse, HttpResponseRedirect
 import importlib
 import os
-import secret
+#import secret
 from django.conf import settings
 from django.shortcuts import redirect
 #hwbi_app modules
