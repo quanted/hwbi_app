@@ -7,7 +7,6 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.conf import settings
-import secret
 from hwbi_app import views
 from hwbi_app import links_left
 
