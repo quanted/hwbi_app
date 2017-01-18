@@ -1,31 +1,30 @@
 from django.template.loader import render_to_string
 from django.http import HttpResponse
-import importlib
+from django.shortcuts import redirect
 import os
+from django.conf import settings
 import links_left
 from hwbi_app import views
 
-def algorithm_page(request, model='none', header='none'):
-    #viewmodule = importlib.import_module('.views', 'models.' + model)
-    header = views.header
 
-    #text_file1 = open(os.path.join(os.environ['PROJECT_PATH'], 'models/' + model + '/' + model + '_algorithm.txt'), 'r')
-    #x = text_file1.read()
+
+def algorithm_page(request, model='hwbi', header='none'):
+    header = views.header
     x = render_to_string('hwbi_algorithm.html')
-    html = render_to_string('01uberheader_main_drupal.html', {
-        'SITE_SKIN': os.environ['SITE_SKIN'],
-        'TITLE': header + ' Algorithms'})
-    html += render_to_string('02uberintroblock_wmodellinks_drupal.html', {
-        'CONTACT_URL': os.environ['CONTACT_URL'],
-        'MODEL': model,
-        'PAGE': 'algorithm'})
-    html += render_to_string('04uberalgorithm_start.html', {})
+
+    """ Returns the html of the references page for hwbi. """
+    html = render_to_string('01epa_drupal_header.html', {})
+    html += render_to_string('02epa_drupal_header_bluestripe_onesidebar.html', {})
+    html += render_to_string('03epa_drupal_section_title.html', {})
+
     html += render_to_string('04ubertext_start_index_drupal.html', {
-        'TITLE': header + ' Algorithms',
         'TEXT_PARAGRAPH': x})
+
     html += render_to_string('04ubertext_end_drupal.html', {})
+
     html += links_left.ordered_list(model, 'algorithms')
-    html += render_to_string('06uberfooter.html', {})
+    html += render_to_string('10epa_drupal_footer.html', {})
+
 
     response = HttpResponse()
     response.write(html)
