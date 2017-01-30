@@ -1,8 +1,8 @@
-# """
-# .. module:: views
-#    :synopsis: A useful module indeed.
-# """
-#
+"""
+.. module:: views
+   :synopsis: A useful module indeed.
+"""
+
 import os
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -18,8 +18,8 @@ header = 'HWBI'
 # ####################################################################
 
 
-def hwbi_view(request):
-    html = render_to_string('index.html', {})
+def getSwaggerJsonContent(request):
+    html = render_to_string('hwbi_swagger.json', {})
     response = HttpResponse()
     response.write(html)
 
@@ -94,78 +94,22 @@ def get_user_HWBI_values(request):
         return HttpResponse({'error': 'Request must by GET'}, content_type="application/json")
 
 
-# TODO: Remove all of this after Drupal testing is complete
-################################################################
-#              TEMPORARY VIEW PAGES                            #
-################################################################
 
-# def descriptionPage(request, model='hwbi'):
-#
-#     text_file2 = open(os.path.join(os.environ['PROJECT_PATH'], 'models/'+model+'/'+model+'_text.txt'), 'r')
-#     xx = text_file2.read()
-#     html = render_to_string('01uberheader.html', {
-#             'site_skin' : os.environ['SITE_SKIN'],
-#             'title': header+' Description'})
-#     html = html + render_to_string('hwbi/02uberintroblock_wmodellinks_hwbi.html', {
-#             'site_skin' : os.environ['SITE_SKIN'],
-#             'model':model,
-#             'page':'description'})
-#     html = html + linksLeft.linksLeft()
-#     html = html + render_to_string('04ubertext_start.html', {
-#             'model_attributes': header+' Overview',
-#             'text_paragraph':xx})
-#     html = html + render_to_string('04ubertext_end.html', {})
-#     html = html + render_to_string('05ubertext_links_right.html', {})
-#     html = html + render_to_string('06uberfooter.html', {'links': ''})
-#
-#     response = HttpResponse()
-#     response.write(html)
-#     return response
-#
-#
-# def algorithmPage(request, model='hwbi'):
-#
-#     text_file1 = open(os.path.join(os.environ['PROJECT_PATH'], 'models/'+model+'/'+model+'_algorithm.txt'),'r')
-#     x = text_file1.read()
-#     html = render_to_string('01uberheader.html', {
-#             'site_skin' : os.environ['SITE_SKIN'],
-#             'title': header+' Algorithms'})
-#     html = html + render_to_string('hwbi/02uberintroblock_wmodellinks_hwbi.html', {
-#             'site_skin' : os.environ['SITE_SKIN'],
-#             'model':model,
-#             'page':'algorithm'})
-#     html = html + linksLeft.linksLeft()
-#     html = html + render_to_string('04uberalgorithm_start.html', {
-#             'model_attributes': header+' Algorithms',
-#             'text_paragraph':x})
-#     html = html + render_to_string('04ubertext_end.html', {})
-#     html = html + render_to_string('05ubertext_links_right.html', {})
-#     html = html + render_to_string('06uberfooter.html', {'links': ''})
-#
-#     response = HttpResponse()
-#     response.write(html)
-#     return response
-#
-#
-# def referencesPage(request, model='hwbi'):
-#
-#     text_file1 = open(os.path.join(os.environ['PROJECT_PATH'], 'models/'+model+'/'+model+'_references.txt'),'r')
-#     x = text_file1.read()
-#     html = render_to_string('01uberheader.html', {
-#             'site_skin' : os.environ['SITE_SKIN'],
-#             'title': header+' References'})
-#     html = html + render_to_string('hwbi/02uberintroblock_wmodellinks_hwbi.html', {
-#             'site_skin' : os.environ['SITE_SKIN'],
-#             'model':model,
-#             'page':'references'})
-#     html = html + linksLeft.linksLeft()
-#     html = html + render_to_string('04uberreferences_start.html', {
-#             'model_attributes': header+' References',
-#             'text_paragraph':x})
-#     html = html + render_to_string('04ubertext_end.html', {})
-#     html = html + render_to_string('05ubertext_links_right.html', {})
-#     html = html + render_to_string('06uberfooter.html', {'links': ''})
-#
-#     response = HttpResponse()
-#     response.write(html)
-#     return response
+def file_not_found(request):
+        html = render_to_string('01uberheader_main_drupal.html', {
+            'SITE_SKIN': os.environ['SITE_SKIN'],
+            'TITLE': 'Error'})
+        html += render_to_string('02uberintroblock_wmodellinks_drupal.html', {
+            'CONTACT_URL': os.environ['CONTACT_URL']})
+        html += render_to_string('04ubertext_start_index_drupal.html', {
+            'TITLE': 'Error Processing Request',
+            'TEXT_PARAGRAPH': ""})
+        html += """<br><img src="/static/images/404error.png" width="300" height="300">"""
+        html += render_to_string('04ubertext_end_drupal.html', {})
+        html += links_left.ordered_list()
+        html += render_to_string('06uberfooter.html', {})
+
+        response = HttpResponse()
+        response.write(html)
+
+        return response

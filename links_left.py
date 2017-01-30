@@ -10,23 +10,10 @@ def ordered_list(model=None, page=None):
             ])
         ),
         ('Documentation', OrderedDict([
-                ('Source Code', 'docs'),
-                ('API Documentation', 'api'),
-                ('Links', 'links')
+                ('API Documentation', 'hwbi/rest'),
+                ('Source Code', 'https://github.com/USEPA/HWBI')
             ])
         )
-        # ('&uuml;bertool', OrderedDict([
-        #         ('Chemical Selection', 'select_chemical'),
-        #         ('Use/Label/Site Data', 'site_data'),
-        #         ('Pesticide Properties', 'pesticide_properties'),
-        #         ('Exposure Concentrations', 'exposure_concentrations'),
-        #         ('Aquatic Toxicity', 'aquatic_toxicity'),
-        #         ('Terrestrial Toxicity', 'terrestrial_toxicity'),
-        #         ('Ecosystem Inputs', 'ecosystem_inputs'),
-        #         ('Run &uuml;bertool', 'run_ubertool'),
-        #         ('Saved Runs', 'user'),
-        #     ])
-        # ),
     ])
 
     #return render_to_string('hwbi/03ubertext_links_left_drupal.html', {
