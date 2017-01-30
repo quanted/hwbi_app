@@ -25,7 +25,6 @@ urlpatterns = [
     url(r'^algorithms$', algorithms.algorithm_page, {'model': "hwbi"}),
     url(r'^references$', references.references_page, {'model': "hwbi"}),
     url(r'^rest$', rest.rest_page, {'model': "hwbi"}),
-    url(r'^test$', rest.rest_page_test, {'model': "hwbi"}),
     url(r'^swag$', views.getSwaggerJsonContent)
 ]
 

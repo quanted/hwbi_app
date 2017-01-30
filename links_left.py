@@ -10,9 +10,8 @@ def ordered_list(model=None, page=None):
             ])
         ),
         ('Documentation', OrderedDict([
-                ('Source Code', 'docs'),
-                ('API Documentation', 'api'),
-                ('Links', 'links')
+                ('API Documentation', 'hwbi/rest'),
+                ('Source Code', 'https://github.com/USEPA/HWBI')
             ])
         )
     ])
