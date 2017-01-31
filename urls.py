@@ -6,7 +6,6 @@ from datetime import datetime
 from django.conf.urls import url
 import django.contrib.auth.views
 
-
 import views
 import algorithms
 import description
@@ -16,6 +15,7 @@ import map
 import references
 import singlepage
 import rest
+
 
 urlpatterns = [
     url(r'^$', description.description_page, {'model': "hwbi"}),
