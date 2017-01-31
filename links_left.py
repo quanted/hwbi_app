@@ -11,8 +11,8 @@ def ordered_list(model=None, page=None):
             ])
         ),
         ('Documentation', OrderedDict([
-                ('API Documentation', '/rest')
-                # ('Source Code', 'https://github.com/USEPA/HWBI')
+                ('API Documentation', '/qedinternal.epa.gov/hwbi/rest'),
+                ('Source Code', '/github.com/USEPA/HWBI')
             ])
         )
     ])
