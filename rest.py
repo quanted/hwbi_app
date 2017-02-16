@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 import os
 from django.conf import settings
-from hwbi_app import views
 from django.shortcuts import render_to_response
 
 

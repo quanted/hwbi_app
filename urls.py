@@ -14,7 +14,6 @@ import links_left
 import map
 import references
 import singlepage
-import rest
 
 
 urlpatterns = [
