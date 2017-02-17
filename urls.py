@@ -14,17 +14,29 @@ import links_left
 import map
 import references
 import singlepage
-
+import hwbi_rest
 
 urlpatterns = [
-    url(r'^$', description.description_page, {'model': "hwbi"}),
-    url(r'^singlePage$', singlepage.singlePage, {'model': "hwbi"}),
-    url(r'^input$', input.input_page, {'model': "hwbi"}),
-    url(r'^map$', map.map_page, {'model': "hwbi"}),
-    url(r'^algorithms$', algorithms.algorithm_page, {'model': "hwbi"}),
-    url(r'^references$', references.references_page, {'model': "hwbi"}),
-    url(r'^rest$', rest.rest_page, {'model': "hwbi"}),
-    url(r'^swag$', views.getSwaggerJsonContent)
+    url(r'^$', description.description_page, {'model': 'hwbi'}),
+    url(r'^singlePage$', singlepage.singlePage, {'model': 'hwbi'}),
+    url(r'^input$', input.input_page, {'model': 'hwbi'}),
+    url(r'^map$', map.map_page, {'model': 'hwbi'}),
+    url(r'^algorithms$', algorithms.algorithm_page, {'model': 'hwbi'}),
+    url(r'^references$', references.references_page, {'model': 'hwbi'}),
+    url(r'^rest$', rest.rest_page, {'model': 'hwbi'}),
+    url(r'^swag$', views.getSwaggerJsonContent),
+       
+    url(r'^rest/calc$', hwbi_rest.getCalc),
+    url(r'^rest/calc/inputs$', hwbi_rest.get_calc_inputs, {}),
+    url(r'^rest/calc/outputs$', hwbi_rest.get_calc_outputs),
+    url(r'^rest/calc/run$', hwbi_rest.get_calc_run),
+
+    #url(r'^rest/hwbi/locations/(?P<state>)/(?P<county>)/$', hwbi_rest.getBaselineScoreByLocation),
+    url(r'^rest/hwbi/locations$', hwbi_rest.get_locations),
+    url(r'^rest/hwbi/locations/inputs$', hwbi_rest.get_locations_inputs),
+    url(r'^rest/hwbi/locations/outputs$', hwbi_rest.get_locations_outputs),
+    url(r'^rest/hwbi/locations/run$', hwbi_rest.get_locations_run)
+  
 ]
 
 # 404 Error view (file not found)
