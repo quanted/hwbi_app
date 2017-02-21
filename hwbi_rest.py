@@ -1,16 +1,16 @@
 from django.http import HttpRequest, HttpResponse
 import json
-from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 import logging
 import os
 import requests
 
-def getHWBI(request):
+def get_hwbi(request):
     """
     HWBI Get Baseline Score by Location
     """
     baseURL = os.getenv("HWBI_REST_SERVER")
-    url = baseURL + 'rest/hwbi/'
+    url = baseURL + '/rest/hwbi/'
     return web_call_new(url, request.json())
 
 
@@ -19,7 +19,7 @@ def get_calc(request):
     HWBI Get Baseline Score by Location
     """
     baseURL = os.getenv("HWBI_REST_SERVER")
-    url = baseURL + 'rest/hwbi/calc'    
+    url = baseURL + '/rest/hwbi/calc'    
     return web_call_new(url, request.json())
 
 def get_calc_inputs(request):
@@ -27,7 +27,7 @@ def get_calc_inputs(request):
     HWBI Get Baseline Score by Location
     """
     baseURL = os.getenv("HWBI_REST_SERVER")
-    url = baseURL + 'rest/hwbi/calc/inputs'    
+    url = baseURL + '/rest/hwbi/calc/inputs'    
     return web_call_new(url, request.json())
 
 def get_calc_outputs(request):
@@ -35,7 +35,7 @@ def get_calc_outputs(request):
     HWBI Get Baseline Score by Location
     """
     baseURL = os.getenv("HWBI_REST_SERVER")
-    url = baseURL + 'rest/hwbi/calc/outputs'    
+    url = baseURL + '/rest/hwbi/calc/outputs'    
     return web_call_new(url, request.json())
 
 def get_calc_run(request):
@@ -43,7 +43,7 @@ def get_calc_run(request):
     HWBI Get Baseline Score by Location
     """
     baseURL = os.getenv("HWBI_REST_SERVER")
-    url = baseURL + 'rest/hwbi/calc/run'    
+    url = baseURL + '/rest/hwbi/calc/run'    
     return web_call_new(url, request.json())
 
 def get_locations(request):
@@ -51,7 +51,7 @@ def get_locations(request):
     HWBI Get Baseline Score by Location
     """
     baseURL = os.getenv("HWBI_REST_SERVER")
-    url = baseURL + 'rest/hwbi/locations'    
+    url = baseURL + '/rest/hwbi/locations'    
     return web_call_new(url, request.json())
 
 def get_locations_inputs(request):
@@ -59,7 +59,7 @@ def get_locations_inputs(request):
     HWBI Get Baseline Score by Location
     """
     baseURL = os.getenv("HWBI_REST_SERVER")
-    url = baseURL + 'rest/hwbi/locations/inputs'    
+    url = baseURL + '/rest/hwbi/locations/inputs'    
     return web_call_new(url, request.json())
 
 def get_locations_outputs(request):
@@ -67,17 +67,18 @@ def get_locations_outputs(request):
     HWBI Get Baseline Score by Location
     """
     baseURL = os.getenv("HWBI_REST_SERVER")
-    url = baseURL + 'rest/hwbi/locations/outputs'    
+    url = baseURL + '/rest/hwbi/locations/outputs'    
     return web_call_new(url, request.json())
 
+#@api_view(['POST'])
 def get_locations_run(request):
     """
     HWBI Get Baseline Score by Location
     """
     baseURL = os.getenv("HWBI_REST_SERVER")
-    url = baseURL + 'rest/hwbi/locations/run'    
-    return web_call_new(url, request.json())
-
+    url = baseURL + '/rest/hwbi/locations/run'   
+    data = request.body
+    return web_call_new(url, data)
 
 
 
