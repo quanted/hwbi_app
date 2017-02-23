@@ -29,9 +29,9 @@ urlpatterns = [
     url(r'^rest$', rest.rest_page, {'model': 'hwbi'}),
     url(r'^swag$', views.getSwaggerJsonContent),
     
-    url(r'^hwbi/$', hwbi_rest.get_hwbi),
+    url(r'^$', hwbi_rest.get_hwbi),
        
-    url(r'^hwbi/calc$', hwbi_rest.get_calc),
+    url(r'^calc$', hwbi_rest.get_calc),
     url(r'^hwbi/calc/inputs$', hwbi_rest.get_calc_inputs),
     url(r'^hwbi/calc/outputs$', hwbi_rest.get_calc_outputs),
     url(r'^hwbi/calc/run$', hwbi_rest.get_calc_run),
