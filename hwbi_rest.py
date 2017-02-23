@@ -10,8 +10,13 @@ def get_hwbi(request):
     HWBI Get Baseline Score by Location
     """
     baseURL = os.getenv('HWBI_REST_SERVER')
+    baseURL2 = os.getenv('HWBI_REST_SERVER2')
     url = baseURL + '/rest/hwbi/'
-    return web_call_new(url)
+    response = HttpResponse()
+    data = {'url':url}
+    response.write(json.dumps(data))
+    return response
+    #return web_call_new(url)
 
 
 def get_calc(request):
