@@ -26,22 +26,20 @@ urlpatterns = [
     url(r'^map$', map.map_page, {'model': 'hwbi'}),
     url(r'^algorithms$', algorithms.algorithm_page, {'model': 'hwbi'}),
     url(r'^references$', references.references_page, {'model': 'hwbi'}),
-    url(r'^rest$', rest.rest_page, {'model': 'hwbi'}),
+    url(r'^api$', rest.rest_page, {'model': 'hwbi'}),
     url(r'^swag$', views.getSwaggerJsonContent),
     
-    url(r'^$', hwbi_rest.get_hwbi),
+    url(r'^rest$', hwbi_rest.get_hwbi),
        
-    url(r'^calc$', hwbi_rest.get_calc),
-    url(r'^hwbi/calc/inputs$', hwbi_rest.get_calc_inputs),
-    url(r'^hwbi/calc/outputs$', hwbi_rest.get_calc_outputs),
-    url(r'^hwbi/calc/run$', hwbi_rest.get_calc_run),
+    url(r'^rest/calc$', hwbi_rest.get_calc),
+    url(r'^rest/calc/inputs$', hwbi_rest.get_calc_inputs),
+    url(r'^rest/calc/outputs$', hwbi_rest.get_calc_outputs),
+    url(r'^rest/calc/run$', hwbi_rest.get_calc_run),
 
-    #url(r'^rest/hwbi/locations/(?P<state>)/(?P<county>)/$', hwbi_rest.getBaselineScoreByLocation),
-    url(r'^hwbi/locations$', hwbi_rest.get_locations),
-    url(r'^hwbi/locations/inputs$', hwbi_rest.get_locations_inputs),
-    url(r'^hwbi/locations/outputs$', hwbi_rest.get_locations_outputs),
-    #url(r'^hwbi/locations/run$', hwbi_rest.get_locations_run,{})
-    url(r'^hwbi/locations/run$', hwbi_rest.get_locations_run)
+    url(r'^rest/locations$', hwbi_rest.get_locations),
+    url(r'^rest/locations/inputs$', hwbi_rest.get_locations_inputs),
+    url(r'^rest/locations/outputs$', hwbi_rest.get_locations_outputs),
+    url(r'^rest/locations/run$', hwbi_rest.get_locations_run)
   
 ]
 
