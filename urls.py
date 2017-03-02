@@ -17,6 +17,7 @@ import singlepage
 import rest
 import hwbi_rest
 
+# if settings.IS_PUBLIC:
 urlpatterns = [
     #front end urls
     url(r'^$', description.description_page, {'model': 'hwbi'}),
@@ -40,8 +41,12 @@ urlpatterns = [
     url(r'^rest/locations/inputs$', hwbi_rest.get_locations_inputs),
     url(r'^rest/locations/outputs$', hwbi_rest.get_locations_outputs),
     url(r'^rest/locations/run$', hwbi_rest.get_locations_run)
-  
 ]
+# else:
+#     urlpatterns = [
+#         url(r'^$', views.hwbi_landing_page),
+#     ]
+
 
 # 404 Error view (file not found)
 handler404 = views.file_not_found
