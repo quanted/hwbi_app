@@ -18,8 +18,7 @@ import rest
 import hwbi_rest
 
 urlpatterns = [
-    #url(r'^$', hwbi_rest, name='hwbi_rest'),
-
+    #front end urls
     url(r'^$', description.description_page, {'model': 'hwbi'}),
     url(r'^singlePage$', singlepage.singlePage, {'model': 'hwbi'}),
     url(r'^input$', input.input_page, {'model': 'hwbi'}),
@@ -28,7 +27,8 @@ urlpatterns = [
     url(r'^references$', references.references_page, {'model': 'hwbi'}),
     url(r'^api$', rest.rest_page, {'model': 'hwbi'}),
     url(r'^swag$', views.getSwaggerJsonContent),
-    
+
+    # rest urls
     url(r'^rest$', hwbi_rest.get_hwbi),
        
     url(r'^rest/calc$', hwbi_rest.get_calc),

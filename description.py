@@ -15,7 +15,7 @@ def description_page(request, model='hwbi', header='none'):
 
     header = views.header
 
-    xx = render_to_string(model + '_text.html')
+    xx = render_to_string('hwbi_text.html')
 
     """ Returns the html of the references page for hwbi. """
     html = render_to_string('01epa_drupal_header.html', {})
