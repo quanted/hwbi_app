@@ -15,7 +15,7 @@ import map
 import references
 import singlepage
 import rest
-import hwbi_rest
+import hwbi_rest_api
 
 # if settings.IS_PUBLIC:
 urlpatterns = [
@@ -30,17 +30,17 @@ urlpatterns = [
     url(r'^swag$', views.getSwaggerJsonContent),
 
     # rest urls
-    url(r'^rest$', hwbi_rest.get_hwbi),
+    url(r'^rest$', hwbi_rest_api.get_hwbi),
        
-    url(r'^rest/calc$', hwbi_rest.get_calc),
-    url(r'^rest/calc/inputs$', hwbi_rest.get_calc_inputs),
-    url(r'^rest/calc/outputs$', hwbi_rest.get_calc_outputs),
-    url(r'^rest/calc/run$', hwbi_rest.get_calc_run),
+    url(r'^rest/calc$', hwbi_rest_api.get_calc),
+    url(r'^rest/calc/inputs$', hwbi_rest_api.get_calc_inputs),
+    url(r'^rest/calc/outputs$', hwbi_rest_api.get_calc_outputs),
+    url(r'^rest/calc/run$', hwbi_rest_api.get_calc_run),
 
-    url(r'^rest/locations$', hwbi_rest.get_locations),
-    url(r'^rest/locations/inputs$', hwbi_rest.get_locations_inputs),
-    url(r'^rest/locations/outputs$', hwbi_rest.get_locations_outputs),
-    url(r'^rest/locations/run$', hwbi_rest.get_locations_run)
+    url(r'^rest/locations$', hwbi_rest_api.get_locations),
+    url(r'^rest/locations/inputs$', hwbi_rest_api.get_locations_inputs),
+    url(r'^rest/locations/outputs$', hwbi_rest_api.get_locations_outputs),
+    url(r'^rest/locations/run$', hwbi_rest_api.get_locations_run)
 ]
 # else:
 #     urlpatterns = [
