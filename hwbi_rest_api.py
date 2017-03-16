@@ -1,5 +1,6 @@
 from django.http import HttpRequest, HttpResponse
 import json
+import sys
 from django.core import serializers
 import logging
 from django.http import JsonResponse
@@ -12,6 +13,9 @@ from models.sqlite_mgr import get_domains
 from models.meta_info import MetaInfo
 from models.meta_info import Link
 from models.meta_info import ComplexEncoder
+from models.scores import Scores
+from models.domain_weights import DomainWeights
+from models.hwbi_calc import HWBICalc
 
 version = 1.0
 
@@ -149,17 +153,76 @@ def get_calc_run(request):
     HWBI Get Baseline Score by Location
     """
 
-    data = None
-    state = None
-    county = None
-    if request.method == 'POST':
-        data = request.body
-        state = data['state']
-        county = data['county']
-
     response = HttpResponse()
-    response.status_code = 500
-    return response
+    try:
+        data = None
+        state = None
+        county = None
+        if request.method == 'POST':
+            data = json.loads(request.body,encoding='utf-8')
+            dct_scores = data['scores']
+            scores = Scores()
+            scores.set_dict(dct_scores)
+            domain_weights = data['domainWeights']
+            domainweights = DomainWeights()
+            domainweights.set_dict(domain_weights)
+            calc = HWBICalc()
+            hwbi = 0.0
+            hwbi = calc.calc(scores,domainweights)
+
+            result = dict()
+            mi = MetaInfo()
+            mi.description = "The Human Well-Being Index (HWBI) model calculator (calc) " \
+                             "uses 22 economic, ecosystem, and social services values to " \
+                             "calculate eight 'domains of well-being': Connection to Nature, " \
+                             "Cultural Fulfillment, Education, Health, Leisure Time, Living " \
+                             "Standards, Safety & Security, and Social Cohesion. These domains " \
+                             "of well-being are then weighed based on user-supplied 'relative " \
+                             "importance values' and are used to determine the overall HWBI score."
+
+            result['metaInfo'] = mi.get_dict()
+
+            #remove
+            rslt = json.dumps(result, cls=ComplexEncoder)
+
+            #build inputs
+            inputs = list()
+            inputs.append(scores.get_metadata())
+            inputs.append(domainweights.get_metadata())
+            result['inputs'] = inputs
+
+            #remove
+            rslt = json.dumps(result, cls=ComplexEncoder)
+
+            #build outputs
+            outputs = dict()
+            outputs['hwbi'] = hwbi
+
+            #remove
+            rslt = json.dumps(result, cls=ComplexEncoder)
+
+            services = get_services()
+            outputs['services'] = services
+
+            domains = get_domains()
+            outputs['domains'] = domains
+
+            result['outputs'] = outputs
+
+            response = HttpResponse()
+            rslt = json.dumps(result, cls=ComplexEncoder)
+            print(rslt)
+
+            #response.content = json.dumps(rslt)
+            response.content = result
+            return response
+
+    except:
+        msg = sys.exc_info()[0]
+        response.content = msg
+        return response
+
+
 
 def get_locations(request):
     """

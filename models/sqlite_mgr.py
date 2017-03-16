@@ -11,7 +11,7 @@ def get_services():
     services = []
     svcs = Service.objects.raw('select * from Services')
     for svc in Service.objects.raw('select * from Services'):
-        services.append(svc)
+        services.append(svc.get_dict())
 
     return services
 
@@ -23,7 +23,7 @@ def get_domains():
 
     domains = []
     for domain in Domain.objects.raw('select * from Domains'):
-        domains.append(domain)
+        domains.append(domain.get_dict())
 
     dct = {}
     dct['description'] = 'hwbi'

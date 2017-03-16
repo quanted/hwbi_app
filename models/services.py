@@ -1,4 +1,6 @@
 from django.db import models
+import copy
+
 
 class Service(models.Model):
     """HWBI Service Model"""
@@ -12,7 +14,7 @@ class Service(models.Model):
     max = models.FloatField
 
     def get_dict(self):
-        dct = {}
+        dct = dict()
         dct['serviceID'] = self.serviceID
         dct['serviceTypeID'] = self.serviceTypeID
         dct['serviceName'] = self.serviceName
@@ -26,5 +28,9 @@ class Service(models.Model):
     def __str__(self):
         return self.serviceID
 
+    #def get_dict(self):
+    #    return copy.deepcopy(self.__dict__)
+
     class Meta:
         ordering = ('serviceID', 'serviceName')
+
