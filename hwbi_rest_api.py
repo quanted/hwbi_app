@@ -213,8 +213,7 @@ def get_calc_run(request):
             rslt = json.dumps(result, cls=ComplexEncoder)
             print(rslt)
 
-            #response.content = json.dumps(rslt)
-            response.content = result
+            response.content = rslt
             return response
 
     except:
