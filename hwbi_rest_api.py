@@ -1,24 +1,22 @@
 from django.http import HttpRequest, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 import json
-import sys
-from django.core import serializers
-import logging
-from django.http import JsonResponse
-import requests
-import os
-from datetime import datetime
-from models.services import Service
+
 from models.sqlite_mgr import get_services
 from models.sqlite_mgr import get_domains
+from models.sqlite_mgr import get_baseline_scores
 from models.meta_info import MetaInfo
 from models.meta_info import Link
 from models.meta_info import ComplexEncoder
+from models.meta_info import MetaInput
+from models.meta_info import MetaBase
 from models.scores import Scores
 from models.domain_weights import DomainWeights
 from models.hwbi_calc import HWBICalc
 
 version = 1.0
 
+@csrf_exempt
 def get_hwbi(request):
     """
     HWBI Get hwbi
@@ -49,10 +47,10 @@ def get_hwbi(request):
     rslt = json.dumps(result, cls=ComplexEncoder)
     print(rslt)
 
-    response.content = json.dumps(rslt)
+    response.content = rslt
     return response
 
-
+@csrf_exempt
 def get_calc(request):
     """
     HWBI Get calc
@@ -87,9 +85,10 @@ def get_calc(request):
     rslt = json.dumps(result, cls=ComplexEncoder)
     print(rslt)
 
-    response.content = json.dumps(rslt)
+    response.content = rslt
     return response
 
+@csrf_exempt
 def get_calc_inputs(request):
     """
     HWBI Get calc inputs
@@ -105,6 +104,7 @@ def get_calc_inputs(request):
                      "of well-being."
 
     result['metaInfo'] = mi.get_dict()
+
     result['metaInputs'] = get_services()
     links = []
     link1 = Link('inputs', 'calc/inputs')
@@ -121,10 +121,11 @@ def get_calc_inputs(request):
     rslt = json.dumps(result, cls=ComplexEncoder)
     print(rslt)
 
-    response.content = json.dumps(rslt)
+    response.content = rslt
     return response
 
 
+@csrf_exempt
 def get_calc_outputs(request):
     """
     HWBI Get calc outputs
@@ -144,135 +145,243 @@ def get_calc_outputs(request):
     rslt = json.dumps(result, cls=ComplexEncoder)
     print(rslt)
 
-    response.content = json.dumps(rslt)
+    response.content = rslt
     return response
 
 
+@csrf_exempt
 def get_calc_run(request):
     """
-    HWBI Get Baseline Score by Location
+    HWBI Get calc run
     """
 
     response = HttpResponse()
-    try:
-        data = None
-        state = None
-        county = None
-        if request.method == 'POST':
-            data = json.loads(request.body,encoding='utf-8')
-            dct_scores = data['scores']
-            scores = Scores()
-            scores.set_dict(dct_scores)
-            domain_weights = data['domainWeights']
-            domainweights = DomainWeights()
-            domainweights.set_dict(domain_weights)
-            calc = HWBICalc()
-            hwbi = 0.0
-            hwbi = calc.calc(scores,domainweights)
 
-            result = dict()
-            mi = MetaInfo()
-            mi.description = "The Human Well-Being Index (HWBI) model calculator (calc) " \
-                             "uses 22 economic, ecosystem, and social services values to " \
-                             "calculate eight 'domains of well-being': Connection to Nature, " \
-                             "Cultural Fulfillment, Education, Health, Leisure Time, Living " \
-                             "Standards, Safety & Security, and Social Cohesion. These domains " \
-                             "of well-being are then weighed based on user-supplied 'relative " \
-                             "importance values' and are used to determine the overall HWBI score."
+    data = None
+    state = None
+    county = None
+    if request.method == 'GET':
+        return HttpResponse(status=404)
 
-            result['metaInfo'] = mi.get_dict()
+    data = json.loads(request.body,encoding='utf-8')
+    dct_scores = data['scores']
+    scores = Scores()
+    scores.set_dict(dct_scores)
+    domain_weights = data['domainWeights']
+    domainweights = DomainWeights()
+    domainweights.set_dict(domain_weights)
+    calc = HWBICalc()
+    hwbi = 0.0
+    hwbi = calc.calc(scores,domainweights)
 
-            #remove
-            rslt = json.dumps(result, cls=ComplexEncoder)
+    result = dict()
+    mi = MetaInfo()
+    mi.description = "The Human Well-Being Index (HWBI) model calculator (calc) " \
+                     "uses 22 economic, ecosystem, and social services values to " \
+                     "calculate eight 'domains of well-being': Connection to Nature, " \
+                     "Cultural Fulfillment, Education, Health, Leisure Time, Living " \
+                     "Standards, Safety & Security, and Social Cohesion. These domains " \
+                     "of well-being are then weighed based on user-supplied 'relative " \
+                     "importance values' and are used to determine the overall HWBI score."
 
-            #build inputs
-            inputs = list()
-            inputs.append(scores.get_metadata())
-            inputs.append(domainweights.get_metadata())
-            result['inputs'] = inputs
+    result['metaInfo'] = mi.get_dict()
 
-            #remove
-            rslt = json.dumps(result, cls=ComplexEncoder)
-
-            #build outputs
-            outputs = dict()
-            outputs['hwbi'] = hwbi
-
-            #remove
-            rslt = json.dumps(result, cls=ComplexEncoder)
-
-            services = get_services()
-            outputs['services'] = services
-
-            domains = get_domains()
-            outputs['domains'] = domains
-
-            result['outputs'] = outputs
-
-            response = HttpResponse()
-            rslt = json.dumps(result, cls=ComplexEncoder)
-            print(rslt)
-
-            response.content = rslt
-            return response
-
-    except:
-        msg = sys.exc_info()[0]
-        response.content = msg
-        return response
+    #build inputs
+    inputs = list()
+    inputs.append(scores.get_metadata())
+    inputs.append(domainweights.get_metadata())
+    result['inputs'] = inputs
 
 
 
+    #build outputs
+    outputs = dict()
+    outputs['hwbi'] = hwbi
+
+    services = get_services()
+    outputs['services'] = services
+
+    domains = get_domains()
+    outputs['domains'] = domains
+
+    result['outputs'] = outputs
+
+    response = HttpResponse()
+    rslt = json.dumps(result, cls=ComplexEncoder)
+    print(rslt)
+
+    response.content = rslt
+    return response
+
+
+@csrf_exempt
 def get_locations(request):
     """
-    HWBI Get Baseline Score by Location
+    HWBI Get Location
     """
-    baseURL = os.getenv('HWBI_REST_SERVER')
-    url = baseURL + '/rest/locations'
-    return web_call_new(url)
+    print('Inside get_locations')
 
+    result = dict()
+
+    mi = MetaInfo()
+    mi.description = "The Human Well-Being Index (HWBI) model locations endpoint " \
+                     "uses state and county names to provide values for 22 economic, " \
+                     "ecosystem, and social services, 8 domains of well-being, " \
+                     "and a total HWBI score for the county."
+
+    result['metaInfo'] = mi.get_dict()
+
+    links = []
+    link1 = Link('inputs', 'locations/inputs')
+    links.append(link1.get_dict())
+    link2 = Link('outputs', 'locations/outputs')
+    links.append(link2.get_dict())
+    link3 = Link('run', 'locations/run')
+    links.append(link3.get_dict())
+    # link4 = Link('html', 'locations/hwbi')
+    # links.append(link4.get_dict())
+    result['links'] = links
+
+    response = HttpResponse()
+    rslt = json.dumps(result, cls=ComplexEncoder)
+    print(rslt)
+
+    response.content = rslt
+    return response
+
+
+@csrf_exempt
 def get_locations_inputs(request):
     """
-    HWBI Get Baseline Score by Location
+    HWBI Get Locations inputs
     """
-    baseURL = os.getenv('HWBI_REST_SERVER')
-    url = baseURL + '/rest/locations/inputs'
-    return web_call_new(url)
+    print('Inside get_locations')
 
+    result = dict()
+
+    mi = MetaInfo()
+    mi.description = "The Human Well-Being Index (HWBI) model locations " \
+                     "endpoint requires USA state and county names."
+
+    result['metaInfo'] = mi.get_dict()
+
+    inputs = list()
+    meta_state = MetaInput('State', 'United States of America state name', type='text', required=True)
+    meta_county = MetaInput('County', 'United States of America county name', type='text', required=True)
+
+    inputs.append(meta_state.get_dict())
+    inputs.append(meta_county.get_dict())
+
+    result['metaInputs'] = inputs
+
+    response = HttpResponse()
+    rslt = json.dumps(result, cls=ComplexEncoder)
+    print(rslt)
+
+    response.content = rslt
+    return response
+
+
+
+
+@csrf_exempt
 def get_locations_outputs(request):
     """
-    HWBI Get Baseline Score by Location
+    HWBI Get calc outputs
     """
-    baseURL = os.getenv('HWBI_REST_SERVER')
-    url = baseURL + '/rest/locations/outputs'
-    return web_call_new(url)
+    print('Inside get_locations_outputs')
 
+    result = {}
+
+    mi = MetaInfo()
+    mi.description = "The Human Well-Being Index (HWBI) model locations endpoint " \
+                     "uses state and county names to provide values for 22 economic, " \
+                     "ecosystem, and social services, 8 domains of well-being, and a " \
+                     "total HWBI score for the county."
+
+    result['metaInfo'] = mi.get_dict()
+    result['metaOutputs'] = get_domains()
+
+    response = HttpResponse()
+    rslt = json.dumps(result, cls=ComplexEncoder)
+    print(rslt)
+
+    response.content = rslt
+    return response
+
+
+@csrf_exempt
 def get_locations_run(request):
     """
-    HWBI Get Baseline Score by Location
+    HWBI Get locations run
     """
-    baseURL = os.getenv('HWBI_REST_SERVER')
-    url = baseURL + '/rest/locations/run'
+
+    response = HttpResponse()
+
     data = None
-    if request.method == 'POST':
-        data = request.body
-    return web_call_new(url, data)
+    state = None
+    county = None
+    if request.method == 'GET':
+        return HttpResponse(status=404)
+
+
+    data = json.loads(request.body,encoding='utf-8')
+    state = data['state']
+    county = data['county']
+
+    scores = Scores()
+    dct_scores = scores.get_dict()
+    base_line_scores = get_baseline_scores(state, county)
+    for base_score in base_line_scores:
+        name = base_score['name'].lower()
+        dct_scores[name] = base_score['score']
+
+    scores.set_dict(dct_scores)
+
+    domainweights = DomainWeights()
+    calc = HWBICalc()
+    hwbi = calc.calc(scores, domainweights)
+
+
+    result = dict()
+    mi = MetaInfo()
+    mi.description = "The Human Well-Being Index (HWBI) model calculator (calc) " \
+                     "uses 22 economic, ecosystem, and social services values to " \
+                     "calculate eight 'domains of well-being': Connection to Nature, " \
+                     "Cultural Fulfillment, Education, Health, Leisure Time, Living " \
+                     "Standards, Safety & Security, and Social Cohesion. These domains " \
+                     "of well-being are then weighed based on user-supplied 'relative " \
+                     "importance values' and are used to determine the overall HWBI score."
+
+    result['metaInfo'] = mi.get_dict()
+
+    # build inputs
+    inputs = list()
+    meta_state = MetaBase('state',value=state, description='US State')
+    meta_county = MetaBase('county', value=county, description='County')
+    inputs.append(meta_state)
+    inputs.append(meta_county)
+    result['inputs'] = inputs
+
+
+    #build outputs
+    outputs = dict()
+    outputs['hwbi'] = hwbi
+
+    #services = get_services()
+    outputs['services'] = base_line_scores
+
+    domains = get_domains()
+    outputs['domains'] = domains
+
+    result['outputs'] = outputs
+
+    response = HttpResponse()
+    rslt = json.dumps(result, cls=ComplexEncoder)
+    print(rslt)
+
+    response.content = rslt
+    return response
 
 
 
-def web_call_new(url, data=None):
-	"""
-	Makes the request to a specified URL
-	and POST data. Returns resonse data as dict
-	"""
-
-	# TODO: Deal with errors more granularly... 403, 500, etc.
-	try:
-		if data == None:
-			response = requests.get(url, timeout=10)
-		else:
-			response = requests.post(url, data=json.dumps(data), headers=headers, timeout=10)
-		return json.loads(response.content)
-	except requests.exceptions.RequestException as e:
-		logging.warning("error at web call: {} /error".format(e))
-		raise e

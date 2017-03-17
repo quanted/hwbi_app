@@ -7,10 +7,10 @@ version = 1.0
 
 class MetaBase():
     """MetaBase class"""
-    def __init__(self):
-        self.name = ""
-        self.value = ""
-        self.description = ""
+    def __init__(self, name='', value='', description=''):
+        self.name = name
+        self.value = value
+        self.description = description
 
     def get_dict(self):
         return copy.deepcopy(self.__dict__)
@@ -18,14 +18,14 @@ class MetaBase():
 
 class MetaInput():
     """MetaInput class"""
-    def __init__(self):
-        self.name = ""
-        self.description = ""
-        self.min = 0.0
-        self.max = 0.0
-        self.unit = ""
-        self.type = ""
-        self.required = False
+    def __init__(self, name='', description = '', min=0.0, max=0.0,unit='', type='', required=False):
+        self.name = name
+        self.description = description
+        self.min = min
+        self.max = max
+        self.unit = unit
+        self.type = type
+        self.required = required
 
     def get_dict(self):
         return copy.deepcopy(self.__dict__)

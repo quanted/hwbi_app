@@ -2,7 +2,7 @@ from django.db import models
 
 class BaselineScore(models.Model):
     """HWBI BaselineScore Model"""
-    county_FIPS = models.TextField(max_length=5)
+    county_FIPS = models.TextField(max_length=5, primary_key=True)
     stateID = models.TextField(max_length=2)
     state = models.TextField(max_length=20)
     county = models.TextField(max_length=30)
@@ -11,6 +11,7 @@ class BaselineScore(models.Model):
     score = models.FloatField
     description = models.TextField(max_length=50)
     serviceType = models.TextField(max_length=15)
+    name = models.TextField(max_length=15)
 
     def get_dict(self):
         dct = {}
@@ -23,6 +24,7 @@ class BaselineScore(models.Model):
         dct['score'] = self.score
         dct['description'] = self.description
         dct['serviceType'] = self.serviceType
+        dct['name'] = self.name
         return dct
 
     def __str__(self):
