@@ -4,7 +4,7 @@ from django.db import models
 class Domain(models.Model):
     """HWBI Domain Model"""
     domainID = models.TextField(max_length=10, primary_key=True)
-    domainName = models.TextField(max_length=25)
+    domainName = models.TextField(max_length=25, null=True, blank=True)
     name = models.TextField(max_length=20)
     min = models.IntegerField
     max = models.IntegerField

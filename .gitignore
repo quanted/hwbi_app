@@ -1,3 +1,5 @@
+hwbi_db.sqlite3
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -94,6 +96,3 @@ secret_key_django_dropbox.txt
 
 # DB stuff
 *.sqlite3
-
-#Visual Studio stuff
-migrations/
