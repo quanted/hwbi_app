@@ -56,7 +56,7 @@ def get_baseline_scores(state=None, county=None):
     scores = []
     query = "Select SSB.county_FIPS, CO.stateID, ST.[State], CO.county, SSB.ServiceID, SVC.ServiceName, SSB.Score, SVC.description, SVT.serviceType, SVC.name " \
             "From ServiceScores_Baseline SSB, Counties CO, [Services] SVC, States ST, ServiceTypes SVT " \
-            "Where SSB.county_FIPS=CO.county_FIPS and UPPER(ST.stateID)='{0}' and UPPER(CO.county)='{1}' and SSB.serviceID=SVC.serviceID and CO.stateID=ST.stateID and SVC.ServiceTypeID=SVT.ServiceTypeID"
+            "Where SSB.county_FIPS=CO.county_FIPS and UPPER(ST.state)='{0}' and UPPER(CO.county)='{1}' and SSB.serviceID=SVC.serviceID and CO.stateID=ST.stateID and SVC.ServiceTypeID=SVT.ServiceTypeID"
 
     query = query.format(state, county)
     print(query)
@@ -129,7 +129,7 @@ def is_state_in_list(state=None, county=None):
         'WY': 'Wyoming'
     }
 
-    if state in states:
+    if state in states.values():
        return True
     else:
         return False
