@@ -130,7 +130,7 @@ def is_state_in_list(state=None, county=None):
     }
 
     if state in states.values():
-       return True
+        return True
     else:
         return False
 
