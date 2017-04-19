@@ -45,13 +45,12 @@ def get_baseline_scores(state=None, county=None):
     if state is None or county is None:
         return None
 
-    state = state.upper()
-    county = county.upper()
-
-    exists = is_state_in_list(state)
+    exists = is_state_in_lowercase_dict(state)
     if exists == False:
         return None
 
+    state = state.upper()
+    county = county.upper()
 
     scores = []
     query = "Select SSB.county_FIPS, CO.stateID, ST.[State], CO.county, SSB.ServiceID, SVC.ServiceName, SSB.Score, SVC.description, SVT.serviceType, SVC.name " \
@@ -66,9 +65,8 @@ def get_baseline_scores(state=None, county=None):
 
     return scores
 
-
-def is_state_in_list(state=None, county=None):
-    """"""
+def get_states_dict():
+    '''Get state abbreviation and name dictionary'''
     states = {
         'AK': 'Alaska',
         'AL': 'Alabama',
@@ -128,9 +126,22 @@ def is_state_in_list(state=None, county=None):
         'WV': 'West Virginia',
         'WY': 'Wyoming'
     }
+    return states
 
+def is_state_in_list(state=None, county=None):
+    """"""
+    states = get_states_dict()
     if state in states.values():
-       return True
+        return True
+    else:
+        return False
+
+def is_state_in_lowercase_dict(state):
+    """Check for lowercase state name in lowercase dict"""
+    states = get_states_dict()
+    lc_states = dict((k.lower(), v.lower()) for k,v in states.items())
+    if state.lower() in lc_states.values():
+        return True
     else:
         return False
 
