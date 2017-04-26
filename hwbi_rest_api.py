@@ -32,6 +32,8 @@ def get_hwbi(request):
                      'ecosystem services and calculate human well-being across the entire ' \
                      'U.S. at the regional, state, and county levels for years 2000-2010.'
 
+    mi.url.href = request.get_full_path()
+
     result['metaInfo'] = mi.get_dict()
 
     links = []
@@ -68,6 +70,8 @@ def get_calc(request):
                      "are then weighed based on user-supplied 'relative importance values' " \
                      "and are used to determine the overall HWBI score."
 
+    mi.url.href = request.get_full_path()
+
     result['metaInfo'] = mi.get_dict()
 
     links = []
@@ -103,6 +107,8 @@ def get_calc_inputs(request):
                      "and a 'relative importance value' for each of the eight domains " \
                      "of well-being."
 
+    mi.url.href = request.get_full_path()
+
     result['metaInfo'] = mi.get_dict()
 
     result['metaInputs'] = get_services()
@@ -137,6 +143,8 @@ def get_calc_outputs(request):
     mi = MetaInfo()
     mi.description = "The Human Well-Being Index (HWBI) model calculator provides " \
                      "eight 'domain of well-being' scores and an overall HWBI score."
+
+    mi.url.href = request.get_full_path()
 
     result['metaInfo'] = mi.get_dict()
     result['metaOutputs'] = get_domains()
@@ -184,6 +192,8 @@ def get_calc_run(request):
                      "of well-being are then weighed based on user-supplied 'relative " \
                      "importance values' and are used to determine the overall HWBI score."
 
+    mi.url.href = request.get_full_path()
+
     result['metaInfo'] = mi.get_dict()
 
     #build inputs
@@ -229,6 +239,8 @@ def get_locations(request):
                      "ecosystem, and social services, 8 domains of well-being, " \
                      "and a total HWBI score for the county."
 
+    mi.url.href = request.get_full_path()
+
     result['metaInfo'] = mi.get_dict()
 
     links = []
@@ -262,6 +274,8 @@ def get_locations_inputs(request):
     mi = MetaInfo()
     mi.description = "The Human Well-Being Index (HWBI) model locations " \
                      "endpoint requires USA state and county names."
+
+    mi.url.href = request.get_full_path()
 
     result['metaInfo'] = mi.get_dict()
 
@@ -299,6 +313,8 @@ def get_locations_outputs(request):
                      "ecosystem, and social services, 8 domains of well-being, and a " \
                      "total HWBI score for the county."
 
+    mi.url.href = request.get_full_path()
+
     result['metaInfo'] = mi.get_dict()
     result['metaOutputs'] = get_domains()
 
@@ -324,7 +340,6 @@ def get_locations_run(request):
     if request.method == 'GET':
         return HttpResponse(status=404)
 
-
     data = json.loads(request.body,encoding='utf-8')
     state = data['state']
     county = data['county']
@@ -332,16 +347,17 @@ def get_locations_run(request):
     scores = Scores()
     dct_scores = scores.get_dict()
     base_line_scores = get_baseline_scores(state, county)
-    for base_score in base_line_scores:
-        name = base_score['name'].lower()
-        dct_scores[name] = base_score['score']
+    #for base_score in base_line_scores:
+    #    name = base_score['name'].lower()
+    #    dct_scores[name] = base_score['score']
 
-    scores.set_dict(dct_scores)
+    #scores.set_dict(dct_scores)
 
-    domainweights = DomainWeights()
+    #domainweights = DomainWeights()
+    domains = get_domains()
     calc = HWBICalc()
-    hwbi = calc.calc(scores, domainweights)
-
+    #hwbi = calc.calc(scores, domainweights)
+    outputs = calc.calc(base_line_scores, domains)
 
     result = dict()
     mi = MetaInfo()
@@ -353,34 +369,29 @@ def get_locations_run(request):
                      "of well-being are then weighed based on user-supplied 'relative " \
                      "importance values' and are used to determine the overall HWBI score."
 
+    mi.url.href = request.get_full_path()
+
     result['metaInfo'] = mi.get_dict()
 
     # build inputs
     inputs = list()
     meta_state = MetaBase('state',value=state, description='US State')
     meta_county = MetaBase('county', value=county, description='County')
-    inputs.append(meta_state)
-    inputs.append(meta_county)
+    inputs.append(meta_state.get_dict())
+    inputs.append(meta_county.get_dict())
     result['inputs'] = inputs
 
+    try:
+        result['outputs'] = outputs.get_dict()
 
-    #build outputs
-    outputs = dict()
-    outputs['hwbi'] = hwbi
+        response = HttpResponse()
+        rslt = json.dumps(result)
+        print(rslt)
 
-    #services = get_services()
-    outputs['services'] = base_line_scores
+        response.content = rslte
+    except Exception as e:
+        s = str(e)
 
-    domains = get_domains()
-    outputs['domains'] = domains
-
-    result['outputs'] = outputs
-
-    response = HttpResponse()
-    rslt = json.dumps(result, cls=ComplexEncoder)
-    print(rslt)
-
-    response.content = rslt
     return response
 
 

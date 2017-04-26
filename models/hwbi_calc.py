@@ -1,4 +1,5 @@
 import copy
+from hwbi_outputs import HwbiOutputs, ScoreOut, DomainOut
 from scores import Scores
 from domain_weights import DomainWeights
 
@@ -6,8 +7,8 @@ class HWBICalc:
     """HWBI Scores Model"""
     def __init__(self):
         self.domain_weights = None
-        self.scores = None
-        self.scaled_scores = None
+        self.scores = dict()
+        self.scaled_scores = dict()
         self.connectiontonature = 0.0
         self.culturalfulfillment = 0.0
         self.education = 0.0
@@ -17,25 +18,51 @@ class HWBICalc:
         self.safetyandsecurity = 0.0
         self.socialcohesion = 0.0
 
-    def calc(self, scores, domain_weights):
+    def calc(self, scores, domains):
     #Have to divide these guys by 100
-        self.scores = copy.deepcopy(scores)
+        outputs = HwbiOutputs()
+
+        # Sum up the total for all the weights
+        total_wt = 0.0
+        for domain in domains:
+            out_domain = DomainOut()
+            out_domain.score = domain.score
+            out_domain.weight = domain.weight
+            out_domain.description = domain.name
+            out_domain.domainID = domain.domainID
+            out_domain.domainName = domain.domainName
+            total_wt = total_wt + domain.weight
+            outputs.domains.append(out_domain)
+
+        for score in scores:
+            out_score = ScoreOut()
+            out_score.serviceID = score.serviceID
+            out_score.name = score.name
+            out_score.serviceType = score.serviceType
+            out_score.description = score.description
+            out_score.score = score.score
+            outputs.scores.append(out_score)
+
+        #self.scores = copy.deepcopy(scores)
+        scores = Scores()
+        scores.set_dict(self.scores)
         self.scaled_scores = copy.deepcopy(scores)
 
-        self.domain_weights = copy.deepcopy(domain_weights)
+        #self.domain_weights = copy.deepcopy(domain_weights)
 
-        #Divide scores by 100 for calc purposes
-        for attr, value in self.scaled_scores.__dict__.iteritems():
-            val = self.scaled_scores.__dict__[attr]
-            self.scaled_scores.__dict__[attr] = val / 100
+
 
         #Sum up the total for all the weights
-        total_wt = 0.0
-        for attr, value in self.domain_weights.__dict__.iteritems():
-            val = self.domain_weights.__dict__[attr]
-            total_wt += val
+        #total_wt = 0.0
+        #for attr, value in self.domain_weights.__dict__.iteritems():
+        #    val = self.domain_weights.__dict__[attr]
+        #    total_wt += val
 
         try:
+            # Divide scores by 100 for calc purposes
+            for attr, value in self.scaled_scores.__dict__.items():
+                val = self.scaled_scores.__dict__[attr]
+                self.scaled_scores.__dict__[attr] = val / 100
 
             self.connectiontonature =   (2.431227
                                    + (0.577159   * self.scaled_scores.communityandfaith)
@@ -158,19 +185,36 @@ class HWBICalc:
                                 + (-0.036457* self.scaled_scores.employment * self.scaled_scores.waterquality)
                                 ) * 100
 
+
+
         hwbi = 0.0
-        hwbi += self.connectiontonature * self.domain_weights.connectiontonature
-        hwbi += self.culturalfulfillment * self.domain_weights.culturalfulfillment
-        hwbi += self.education * self.domain_weights.education
+        #hwbi += self.connectiontonature * self.domain_weights.connectiontonature
 
-        hwbi += self.health * self.domain_weights.health
-        hwbi += self.leisuretime * self.domain_weights.leisuretime
-        hwbi += self.livingstandards * self.domain_weights.livingstandards
+        hwbi += self.connectiontonature * next((x for x in outputs.domains if x.domainID == 'Connection'), None).weight
+        next((x for x in outputs.domains if x.domainID == 'Connection'), None).score = self.connectiontonature
 
-        hwbi += self.safetyandsecurity * self.domain_weights.safetyandsecurity
-        hwbi += self.socialcohesion * self.domain_weights.socialcohesion
+        hwbi += self.culturalfulfillment * next((x for x in outputs.domains if x.domainID == 'Culture'), None).weight
+        next((x for x in outputs.domains if x.domainID == 'Culture'), None).score = self.culturalfulfillment
+
+        hwbi += self.education * next((x for x in outputs.domains if x.domainID == 'Education'), None).weight
+        next((x for x in outputs.domains if x.domainID == 'Education'), None).score = self.education
+
+        hwbi += self.health * next((x for x in outputs.domains if x.domainID == 'Health'), None).weight
+        next((x for x in outputs.domains if x.domainID == 'Health'), None).score = self.health
+
+        hwbi += self.leisuretime * next((x for x in outputs.domains if x.domainID == 'Leisure'), None).weight
+        next((x for x in outputs.domains if x.domainID == 'Leisure'), None).score = self.leisuretime
+
+        hwbi += self.livingstandards * next((x for x in outputs.domains if x.domainID == 'Living'), None).weight
+        next((x for x in outputs.domains if x.domainID == 'Living'), None).score = self.livingstandards
+
+        hwbi += self.safetyandsecurity * next((x for x in outputs.domains if x.domainID == 'Safety'), None).weight
+        next((x for x in outputs.domains if x.domainID == 'Safety'), None).score = self.safetyandsecurity
+
+        hwbi += self.socialcohesion * next((x for x in outputs.domains if x.domainID == 'Social'), None).weight
+        next((x for x in outputs.domains if x.domainID == 'Social'), None).score = self.socialcohesion
 
         hwbi /= total_wt
-
-        return hwbi
+        outputs.hwbi = hwbi
+        return outputs
 
