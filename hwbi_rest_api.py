@@ -388,7 +388,7 @@ def get_locations_run(request):
         rslt = json.dumps(result)
         print(rslt)
 
-        response.content = rslte
+        response.content = rslt
     except Exception as e:
         s = str(e)
 
