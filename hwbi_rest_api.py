@@ -180,7 +180,7 @@ def get_calc_run(request):
     domainweights.set_dict(domain_weights)
     calc = HWBICalc()
     hwbi = 0.0
-    hwbi = calc.calc(scores,domainweights)
+    hwbi = calc.calc_run(scores,domainweights)
 
     result = dict()
     mi = MetaInfo()
@@ -347,17 +347,11 @@ def get_locations_run(request):
     scores = Scores()
     dct_scores = scores.get_dict()
     base_line_scores = get_baseline_scores(state, county)
-    #for base_score in base_line_scores:
-    #    name = base_score['name'].lower()
-    #    dct_scores[name] = base_score['score']
 
-    #scores.set_dict(dct_scores)
-
-    #domainweights = DomainWeights()
     domains = get_domains()
     calc = HWBICalc()
-    #hwbi = calc.calc(scores, domainweights)
-    outputs = calc.calc(base_line_scores, domains)
+
+    outputs = calc.location_run(base_line_scores, domains)
 
     result = dict()
     mi = MetaInfo()

@@ -31,8 +31,8 @@ class Scores:
     def get_dict(self):
         return copy.deepcopy(self.__dict__)
 
-    def set_dict(self, dict):
-        self.self.__dict__ = copy.deepcopy(dict)
+    #def set_dict(self, dict):
+    #    self.self.__dict__ = copy.deepcopy(dict)
 
 
     def set_dict(self, dct=None):
