@@ -21,19 +21,19 @@ def get_domains():
     HWBI Get Domains
     """
 
-    domains = []
+    domains = list()
     for domain in Domain.objects.raw('select * from Domains'):
-        domains.append(domain.get_dict())
+        domains.append(domain)
 
-    dct = {}
-    dct['description'] = 'hwbi'
-    dct['name'] = 'human well-being index'
-    dct['min'] = 0
-    dct['max'] = 5
-    dct['unit'] = 'hwbi score'
-    dct['type'] = 'int'
+    # dct = {}
+    # dct['description'] = 'hwbi'
+    # dct['name'] = 'human well-being index'
+    # dct['min'] = 0
+    # dct['max'] = 5
+    # dct['unit'] = 'hwbi score'
+    # dct['type'] = 'int'
 
-    domains.append(dct)
+    #domains.append(dct)
     return domains
 
 
@@ -61,7 +61,7 @@ def get_baseline_scores(state=None, county=None):
     print(query)
 
     for score in BaselineScore.objects.raw(query):
-        scores.append(score.get_dict())
+        scores.append(score)
 
     return scores
 

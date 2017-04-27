@@ -8,14 +8,18 @@ class Domain(models.Model):
     name = models.TextField(max_length=20)
     min = models.IntegerField
     max = models.IntegerField
+    score = 0.0
+    weight = 1.0
 
     def get_dict(self):
         dct = {}
-#       dct['domainID'] = self.domainID
+        dct['domainID'] = self.domainID
         dct['description'] = self.domainName
-        dct['name'] = self.name
+        dct['domainName'] = self.name
         dct['min'] = self.min
         dct['max'] = self.max
         dct['unit'] = 'domain score'
         dct['type'] = 'number'
+        dct['score'] = self.score
+        dct['weight'] = self.weight
         return dct

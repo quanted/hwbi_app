@@ -48,7 +48,7 @@ class MetaOutput:
 class MetaInfo:
     """MetaInfo class"""
     def __init__(self, model='hwbi', collection='qed'):
-        self.model = model
+        self.modelVersion = model
         self.collection = collection
         self.version = version
         self.description = ""
@@ -57,7 +57,9 @@ class MetaInfo:
         self.url = Url()
 
     def get_dict(self):
-        return copy.deepcopy(self.__dict__)
+        dct = copy.deepcopy(self.__dict__)
+        dct['url'] = self.url.get_dict()
+        return dct
 
 
 class Url:
