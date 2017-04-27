@@ -39,7 +39,7 @@ class ScoreOut:
         self.name = name
         self.serviceType = serviceType
         self.description = description
-        self.score = score
+        self.Score = score
 
     def get_dict(self):
         return self.__dict__

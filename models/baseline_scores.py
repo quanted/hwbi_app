@@ -8,7 +8,7 @@ class BaselineScore(models.Model):
     county = models.TextField(max_length=30)
     serviceID = models.TextField(max_length=3)
     serviceName = models.TextField(max_length=10)
-    score = models.FloatField
+    Score = models.FloatField
     description = models.TextField(max_length=50)
     serviceType = models.TextField(max_length=15)
     name = models.TextField(max_length=15)

@@ -198,9 +198,9 @@ class HWBICalc:
             out_score = ScoreOut()
             out_score.serviceID = score.serviceID
             out_score.name = score.name
-            out_score.serviceType = score.serviceType
+            out_score.serviceType = score.serviceType.lower()
             out_score.description = score.description
-            out_score.score = score.score
+            out_score.Score = score.score
             outputs.scores.append(out_score)
             scaled_scores.__dict__[score.name.lower()] = score.score
 
