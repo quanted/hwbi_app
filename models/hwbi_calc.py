@@ -192,6 +192,8 @@ class HWBICalc:
             total_wt = total_wt + domain.weight
             outputs.domains.append(out_domain)
 
+
+        scaled_scores = Scores()
         for score in scores:
             out_score = ScoreOut()
             out_score.serviceID = score.serviceID
@@ -200,11 +202,11 @@ class HWBICalc:
             out_score.description = score.description
             out_score.score = score.score
             outputs.scores.append(out_score)
+            scaled_scores.__dict__[score.name.lower()] = score.score
+
 
         #self.scores = copy.deepcopy(scores)
-        scores = Scores()
-        scores.set_dict(self.scores)
-        self.scaled_scores = copy.deepcopy(scores)
+        self.scaled_scores = scaled_scores
 
         #self.domain_weights = copy.deepcopy(domain_weights)
 
