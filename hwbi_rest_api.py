@@ -171,7 +171,7 @@ def get_calc_run(request):
     if request.method == 'GET':
         return HttpResponse(status=404)
 
-    data = json.loads(request.body,encoding='utf-8')
+    data = json.loads(request.body, encoding='utf-8')
     dct_scores = data['scores']
     scores = Scores()
     scores.set_dict(dct_scores)
@@ -180,7 +180,7 @@ def get_calc_run(request):
     domainweights.set_dict(domain_weights)
     calc = HWBICalc()
     hwbi = 0.0
-    hwbi = calc.calc_run(scores,domainweights)
+    hwbi = calc.calc_run(scores, domainweights)
 
     result = dict()
     mi = MetaInfo()
@@ -198,8 +198,16 @@ def get_calc_run(request):
 
     #build inputs
     inputs = list()
-    inputs.append(scores.get_metadata())
-    inputs.append(domainweights.get_metadata())
+    lst_scores = scores.get_metadata()
+    for score in lst_scores:
+        inputs.append(score)
+
+    lst_domains = domainweights.get_metadata()
+    for domain in lst_domains:
+        inputs.append(domain)
+
+    #inputs.append(scores.get_metadata())
+    #inputs.append(domainweights.get_metadata())
     result['inputs'] = inputs
 
 

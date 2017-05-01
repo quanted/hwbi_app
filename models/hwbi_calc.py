@@ -40,8 +40,7 @@ class HWBICalc:
                                    + (0.05051 * self.scaled_scores.waterquality)
                                    + (-1.934059 * self.scaled_scores.labor)
                                    + (0.211648 * self.scaled_scores.education)
-                                   + (
-                                   -1.998989 * self.scaled_scores.communityandfaith * self.scaled_scores.emergencypreparedness)
+                                   + (-1.998989 * self.scaled_scores.communityandfaith * self.scaled_scores.emergencypreparedness)
                                    + (2.103267 * self.scaled_scores.activism * self.scaled_scores.emergencypreparedness)
                                    + (3.222831 * self.scaled_scores.emergencypreparedness * self.scaled_scores.labor)
                                    ) * 100
