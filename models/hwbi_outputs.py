@@ -7,11 +7,11 @@ class HwbiOutputs:
 
     def __init__(self):
         self.hwbi = 0.0
-        self.scores = list()
+        self.services = list()
         self.domains = list()
 
-    def add_score(self, score):
-        self.scores.append(score)
+    def add_service(self, service):
+        self.service.append(service)
 
     def add_domain(self, domain):
         self.domains.append(domain)
@@ -19,27 +19,27 @@ class HwbiOutputs:
     def get_dict(self):
         dct = dict()
         dct['hwbi'] = self.hwbi
-        lst_scores = list()
-        for score in self.scores:
-            lst_scores.append(score.get_dict())
+        lst_services = list()
+        for service in self.services:
+            lst_services.append(service.get_dict())
         lst_domains = list()
         for domain in self.domains:
             lst_domains.append(domain.get_dict())
 
-        dct['services'] = lst_scores
+        dct['services'] = lst_services
         dct['domains'] = lst_domains
         return dct
 
 
-class ScoreOut:
+class ServiceOut:
     """HWBI ServiceOutput"""
 
-    def __init__(self, serviceID='', name='', serviceType='', description='', score=0.0):
+    def __init__(self, serviceID='', name='', serviceTypeName='', description='', score=0.0):
         self.serviceID = serviceID
         self.name = name
-        self.serviceType = serviceType
+        self.serviceTypeName = serviceTypeName
         self.description = description
-        self.Score = score
+        self.score = score
 
     def get_dict(self):
         return self.__dict__

@@ -11,7 +11,8 @@ def get_services():
     services = []
     svcs = Service.objects.raw('select * from Services')
     for svc in Service.objects.raw('select * from Services'):
-        services.append(svc.get_dict())
+        #services.append(svc.get_dict())
+        services.append(svc)
 
     return services
 
@@ -53,9 +54,9 @@ def get_baseline_scores(state=None, county=None):
     county = county.upper()
 
     scores = []
-    query = "Select SSB.county_FIPS, CO.stateID, ST.[State], CO.county, SSB.ServiceID, SVC.ServiceName, SSB.Score, SVC.description, SVT.serviceType, SVC.name " \
+    query = "Select SSB.county_FIPS, CO.stateID, ST.[State], CO.county, SSB.serviceID, SVC.serviceName, SVC.serviceTypeName, SSB.score, SVC.description, SVT.serviceType, SVC.name " \
             "From ServiceScores_Baseline SSB, Counties CO, [Services] SVC, States ST, ServiceTypes SVT " \
-            "Where SSB.county_FIPS=CO.county_FIPS and UPPER(ST.state)='{0}' and UPPER(CO.county)='{1}' and SSB.serviceID=SVC.serviceID and CO.stateID=ST.stateID and SVC.ServiceTypeID=SVT.ServiceTypeID"
+            "Where SSB.county_FIPS=CO.county_FIPS and UPPER(ST.state)='{0}' and UPPER(CO.county)='{1}' and SSB.serviceID=SVC.serviceID and CO.stateID=ST.stateID and SVC.serviceTypeID=SVT.serviceTypeID"
 
     query = query.format(state, county)
     print(query)
