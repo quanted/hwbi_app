@@ -411,11 +411,17 @@ class HWBICalc:
 
         lst_domains = list()
         for domain in domains:
-            lst_domains.append(domain.get_domain_out())
+            if isinstance(domain, DomainOut):
+                lst_domains.append(domain)
+            else:
+                lst_domains.append(domain.get_domain_out())
 
         lst_scores = list()
         for svc in scores:
-            lst_scores.append(svc.get_service_out())
+            if isinstance(svc, ServiceOut):
+                lst_scores.append(svc)
+            else:
+                lst_scores.append(svc.get_service_out())
 
         outputs.domains = lst_domains
         outputs.services = lst_scores
