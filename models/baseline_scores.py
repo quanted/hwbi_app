@@ -1,4 +1,5 @@
 from django.db import models
+from hwbi_outputs import ServiceOut
 
 class BaselineScore(models.Model):
     """HWBI BaselineScore Model"""
@@ -8,7 +9,8 @@ class BaselineScore(models.Model):
     county = models.TextField(max_length=30)
     serviceID = models.TextField(max_length=3)
     serviceName = models.TextField(max_length=10)
-    Score = models.FloatField
+    serviceTypeName = models.TextField(max_length=10)
+    score = models.FloatField
     description = models.TextField(max_length=50)
     serviceType = models.TextField(max_length=15)
     name = models.TextField(max_length=15)
@@ -29,6 +31,16 @@ class BaselineScore(models.Model):
 
     def __str__(self):
         return self.serviceID
+
+    def get_service_out(self):
+        service_out = ServiceOut()
+        service_out.serviceID = self.serviceID
+        service_out.name = self.name
+        service_out.serviceTypeName = self.serviceTypeName
+        service_out.score = self.score
+        service_out.description = self.description
+        return service_out
+
 
     class Meta:
         ordering = ('state', 'county', 'serviceID')
