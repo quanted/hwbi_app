@@ -1,4 +1,5 @@
 from django.db import models
+from hwbi_outputs import DomainOut
 
 
 class Domain(models.Model):
@@ -23,3 +24,17 @@ class Domain(models.Model):
         dct['score'] = self.score
         dct['weight'] = self.weight
         return dct
+
+    def get_domain_out(self):
+        domain_out = DomainOut()
+        domain_out.domainID = self.domainID
+        domain_out.description = self.domainName
+        domain_out.name = self.name
+        domain_out.score = self.score
+        domain_out.weight = self.weight
+        return domain_out
+
+    def get_input_metadata(self):
+        dct = {'name' : self.name, 'description' : self.domainName, 'value' : self.weight}
+        return dct
+

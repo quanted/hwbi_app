@@ -163,24 +163,37 @@ def get_calc_run(request):
     HWBI Get calc run
     """
 
-    response = HttpResponse()
-
-    data = None
-    state = None
-    county = None
     if request.method == 'GET':
         return HttpResponse(status=404)
 
     data = json.loads(request.body, encoding='utf-8')
     dct_scores = data['scores']
-    scores = Scores()
-    scores.set_dict(dct_scores)
+    dct_scores_lower = dict()
+    for k, v in dct_scores.items():
+        dct_scores_lower[k.lower()] = v
+
+    services = get_services()
+    for svc in services:
+        svc.score = dct_scores_lower[svc.name.lower()]
+
     domain_weights = data['domainWeights']
-    domainweights = DomainWeights()
-    domainweights.set_dict(domain_weights)
+    dct_domain_weight_lower = dict()
+    for k, v in domain_weights.items():
+        dct_domain_weight_lower[k.lower()] = v
+
+    domains = get_domains()
+    for domain in domains:
+        domain.weight = dct_domain_weight_lower[domain.name.lower()]
+
+    inputs = list()
+    for svc in services:
+        inputs.append(svc.get_input_metadata())
+
+    for domain in domains:
+        inputs.append(domain.get_input_metadata())
+
     calc = HWBICalc()
-    hwbi = 0.0
-    hwbi = calc.calc_run(scores, domainweights)
+    hwbi_out = calc.hwbi_run(services, domains)
 
     result = dict()
     mi = MetaInfo()
@@ -196,33 +209,8 @@ def get_calc_run(request):
 
     result['metaInfo'] = mi.get_dict()
 
-    #build inputs
-    inputs = list()
-    lst_scores = scores.get_metadata()
-    for score in lst_scores:
-        inputs.append(score)
-
-    lst_domains = domainweights.get_metadata()
-    for domain in lst_domains:
-        inputs.append(domain)
-
-    #inputs.append(scores.get_metadata())
-    #inputs.append(domainweights.get_metadata())
     result['inputs'] = inputs
-
-
-
-    #build outputs
-    outputs = dict()
-    outputs['hwbi'] = hwbi
-
-    services = get_services()
-    outputs['services'] = services
-
-    domains = get_domains()
-    outputs['domains'] = domains
-
-    result['outputs'] = outputs
+    result['outputs'] = hwbi_out.get_dict()
 
     response = HttpResponse()
     rslt = json.dumps(result, cls=ComplexEncoder)
@@ -352,14 +340,18 @@ def get_locations_run(request):
     state = data['state']
     county = data['county']
 
-    scores = Scores()
-    dct_scores = scores.get_dict()
+    services = list()
     base_line_scores = get_baseline_scores(state, county)
+    for base_score in base_line_scores:
+        services.append(base_score.get_service_out())
 
-    domains = get_domains()
+    domains = list()
+    db_domains = get_domains()
+    for domain in db_domains:
+        domains.append(domain.get_domain_out())
+
     calc = HWBICalc()
-
-    outputs = calc.location_run(base_line_scores, domains)
+    outputs = calc.hwbi_run(services, domains)
 
     result = dict()
     mi = MetaInfo()
