@@ -20,7 +20,7 @@ header = 'HWBI'
 
 
 def getSwaggerJsonContent(request):
-    html = render_to_string('hwbi_swagger.json', {})
+    html = render_to_string('hwbi_swagger2.json', {})
     response = HttpResponse()
     response.write(html)
 
