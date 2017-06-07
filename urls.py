@@ -26,7 +26,7 @@ urlpatterns = [
     url(r'^map$', map.map_page, {'model': 'hwbi'}),
     url(r'^algorithms$', algorithms.algorithm_page, {'model': 'hwbi'}),
     url(r'^references$', references.references_page, {'model': 'hwbi'}),
-    url(r'^api$', rest.rest_page, {'model': 'hwbi'}),
+    url(r'^rest$', rest.rest_page, {'model': 'hwbi'}),
     url(r'^swag$', views.getSwaggerJsonContent),
 
     # rest urls
