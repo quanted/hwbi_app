@@ -1,5 +1,5 @@
 from django.db import models
-from hwbi_outputs import ServiceOut
+from .hwbi_outputs import ServiceOut
 
 class Service(models.Model):
     """HWBI Service Model"""

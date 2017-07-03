@@ -1,5 +1,5 @@
 from django.db import models
-from hwbi_outputs import DomainOut
+from .hwbi_outputs import DomainOut
 
 
 class Domain(models.Model):

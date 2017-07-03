@@ -6,16 +6,8 @@ from datetime import datetime
 from django.conf.urls import url
 import django.contrib.auth.views
 
-import views
-import algorithms
-import description
-import input
-import links_left
-import map
-import references
-import singlepage
-import rest
-import hwbi_rest_api
+from . import views, algorithms, description, input, links_left, map
+from . import references, singlepage, rest, hwbi_rest_api
 
 # if settings.IS_PUBLIC:
 urlpatterns = [

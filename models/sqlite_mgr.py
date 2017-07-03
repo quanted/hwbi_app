@@ -1,6 +1,6 @@
-from hwbi_app.models.domains import Domain
-from hwbi_app.models.services import Service
-from hwbi_app.models.baseline_scores import BaselineScore
+from .domains import Domain
+from .services import Service
+from .baseline_scores import BaselineScore
 
 
 def get_services():
