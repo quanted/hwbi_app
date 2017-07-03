@@ -36,8 +36,9 @@ def get_default_HWBI_values(request):
             response = requests.get(
                 hwbi_server + "/hwbi/api/Baseline?State=%s&County=%s" % (state, county)
             )
-        except Exception, e:
-            response = {'error': str(e)}
+        except:
+            response = 'error'
+            #'{'error': str(e)}
 
         return HttpResponse(response.content, content_type="application/json")
 
