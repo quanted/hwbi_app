@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 import os
 from django.conf import settings
-import links_left
-from hwbi_app import views
+from . import links_left
+from . import views
 
 
 def references_page(request, model='hwbi', header='none'):
