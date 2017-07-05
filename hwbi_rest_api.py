@@ -2,17 +2,17 @@ from django.http import HttpRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-from models.sqlite_mgr import get_services
-from models.sqlite_mgr import get_domains
-from models.sqlite_mgr import get_baseline_scores
-from models.meta_info import MetaInfo
-from models.meta_info import Link
-from models.meta_info import ComplexEncoder
-from models.meta_info import MetaInput
-from models.meta_info import MetaBase
-from models.scores import Scores
-from models.domain_weights import DomainWeights
-from models.hwbi_calc import HWBICalc
+from .models.sqlite_mgr import get_services
+from .models.sqlite_mgr import get_domains
+from .models.sqlite_mgr import get_baseline_scores
+from .models.meta_info import MetaInfo
+from .models.meta_info import Link
+from .models.meta_info import ComplexEncoder
+from .models.meta_info import MetaInput
+from .models.meta_info import MetaBase
+from .models.scores import Scores
+from .models.domain_weights import DomainWeights
+from .models.hwbi_calc import HWBICalc
 
 version = 1.0
 
