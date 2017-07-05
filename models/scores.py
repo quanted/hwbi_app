@@ -38,14 +38,14 @@ class Scores:
     def set_dict(self, dct=None):
         if dct is None:
             return
-        for attr, value in dct.iteritems():
+        for attr, value in dct.items():
             attr_lower = attr.lower()
             if attr_lower in self.__dict__:
                 self.__dict__[attr_lower] = dct[attr]
 
     def get_metadata(self):
         lst = []
-        for attr, value in self.__dict__.iteritems():
+        for attr, value in self.__dict__.items():
             dct_attr = dict(name=attr, value=value, description='')
             lst.append(dct_attr)
 
