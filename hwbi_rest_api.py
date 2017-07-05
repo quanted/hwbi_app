@@ -11,7 +11,7 @@ from .models.meta_info import ComplexEncoder
 from .models.meta_info import MetaInput
 from .models.meta_info import MetaBase
 from .models.scores import Scores
-from .models.domain_weights import DomainWeights
+#from .models.domain_weights import DomainWeights
 from .models.hwbi_calc import HWBICalc
 
 version = 1.0
