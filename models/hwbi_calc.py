@@ -2,7 +2,7 @@ import copy
 from .hwbi_outputs import HwbiOutputs, ServiceOut, DomainOut
 from .scores import Scores
 from .sqlite_mgr import get_services, get_domains
-from .domain_weights import DomainWeights
+# from .domain_weights import DomainWeights
 
 class HWBICalc:
     """HWBI Scores Model"""
