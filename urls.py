@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'^algorithms$', algorithms.algorithm_page, {'model': 'hwbi'}),
     url(r'^references$', references.references_page, {'model': 'hwbi'}),
     url(r'^rest$', rest.rest_page, {'model': 'hwbi'}),
-    url(r'^swag$', views.getSwaggerJsonContent),
+    url(r'^rest/swag$', views.getSwaggerJsonContent),
 
     # rest urls
     url(r'^rest$', hwbi_rest_api.get_hwbi),
