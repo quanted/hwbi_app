@@ -9,30 +9,47 @@ import django.contrib.auth.views
 from . import views, algorithms, description, input, links_left, map
 from . import references, singlepage, rest, hwbi_rest_api
 
+# Django 2.0 url import
+from django.urls import path
+
+from django.contrib import admin
+from .disc_views import HWBI as hwbi
+from . import disc_rest_api as disc_api
+
 # if settings.IS_PUBLIC:
 urlpatterns = [
     #front end urls
-    url(r'^$', description.description_page, {'model': 'hwbi'}),
-    url(r'^singlePage$', singlepage.singlePage, {'model': 'hwbi'}),
-    url(r'^input$', input.input_page, {'model': 'hwbi'}),
-    url(r'^map$', map.map_page, {'model': 'hwbi'}),
-    url(r'^algorithms$', algorithms.algorithm_page, {'model': 'hwbi'}),
-    url(r'^references$', references.references_page, {'model': 'hwbi'}),
-    url(r'^rest$', rest.rest_page, {'model': 'hwbi'}),
-    url(r'^rest/swag$', views.getSwaggerJsonContent),
+    # url(r'^$', description.description_page, {'model': 'hwbi'}),
+    # url(r'^singlePage$', singlepage.singlePage, {'model': 'hwbi'}),
+    # url(r'^input$', input.input_page, {'model': 'hwbi'}),
+    # url(r'^map$', map.map_page, {'model': 'hwbi'}),
+    # url(r'^algorithms$', algorithms.algorithm_page, {'model': 'hwbi'}),
+    # url(r'^references$', references.references_page, {'model': 'hwbi'}),
+    # url(r'^rest$', rest.rest_page, {'model': 'hwbi'}),
+    # url(r'^rest/swag$', views.getSwaggerJsonContent),
 
     # rest urls
-    url(r'^rest$', hwbi_rest_api.get_hwbi),
+    # url(r'^rest$', hwbi_rest_api.get_hwbi),
        
-    url(r'^rest/calc$', hwbi_rest_api.get_calc),
-    url(r'^rest/calc/inputs$', hwbi_rest_api.get_calc_inputs),
-    url(r'^rest/calc/outputs$', hwbi_rest_api.get_calc_outputs),
-    url(r'^rest/calc/run$', hwbi_rest_api.get_calc_run),
+    # url(r'^rest/calc$', hwbi_rest_api.get_calc),
+    # url(r'^rest/calc/inputs$', hwbi_rest_api.get_calc_inputs),
+    # url(r'^rest/calc/outputs$', hwbi_rest_api.get_calc_outputs),
+    # url(r'^rest/calc/run$', hwbi_rest_api.get_calc_run),
+    #
+    # url(r'^rest/locations$', hwbi_rest_api.get_locations),
+    # url(r'^rest/locations/inputs$', hwbi_rest_api.get_locations_inputs),
+    # url(r'^rest/locations/outputs$', hwbi_rest_api.get_locations_outputs),
+    # url(r'^rest/locations/run$', hwbi_rest_api.get_locations_run)
 
-    url(r'^rest/locations$', hwbi_rest_api.get_locations),
-    url(r'^rest/locations/inputs$', hwbi_rest_api.get_locations_inputs),
-    url(r'^rest/locations/outputs$', hwbi_rest_api.get_locations_outputs),
-    url(r'^rest/locations/run$', hwbi_rest_api.get_locations_run)
+    # Django 2.0 syntax url dispatcher syntax
+    path('', hwbi.disc_page),
+    path('admin', admin.site.urls),
+    path('disc', hwbi.disc_page),
+    path('disc/<slug:page>', hwbi.disc_page),
+
+    # HWBI DISC rest api endpoints
+    path('disc/rest/scores', disc_api.get_disc_scores)
+
 ]
 # else:
 #     urlpatterns = [
