@@ -13,13 +13,16 @@ class HWBI:
     def disc_page(self, page=''):
         if page is '':
             page = 'about'
-        html = build_disc_page(page=page)
+        location = {}
+        for key, value in self.POST.dict().items():
+            location[key] = '"' + str(value) + '"'
+        html = build_disc_page(location, page=page)
         response = HttpResponse()
         response.write(html)
         return response
 
 
-def build_disc_page(page):
+def build_disc_page(loc, page):
 
     temp_google_key = 'AIzaSyDEC5r_Tq31qfF8BKIdhUAH1KorOfjLV4g'
 
@@ -29,7 +32,7 @@ def build_disc_page(page):
         body = render_to_string('disc/hwbi-disc_about.html')
     else:
         imports = render_to_string('disc/hwbi-disc_generic-imports.html', {'API_KEY': temp_google_key})
-        body = render_to_string('disc/hwbi-disc_search-field.html')
+        body = render_to_string('disc/hwbi-disc_search-field.html', {'LOCATION': loc})
         if page == 'community-snapshot':
             body += render_to_string('disc/hwbi-disc_snapshot-body.html')
 
@@ -45,7 +48,8 @@ def build_disc_page(page):
     })
 
     # Soft intro
-    html += render_to_string('disc/hwbi-disc_intro.html')
+    if page == 'about':
+        html += render_to_string('disc/hwbi-disc_intro.html')
 
     menu_pages = set_menu(page)
     # Quick Menu
