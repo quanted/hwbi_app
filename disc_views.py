@@ -5,6 +5,7 @@ views.py
 
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+import json
 
 
 class HWBI:
@@ -15,7 +16,7 @@ class HWBI:
             page = 'about'
         location = {}
         for key, value in self.POST.dict().items():
-            location[key] = '"' + str(value) + '"'
+            location[key] = str(value)
         html = build_disc_page(location, page=page)
         response = HttpResponse()
         response.write(html)
@@ -23,18 +24,7 @@ class HWBI:
 
 
 def build_disc_page(loc, page):
-
-    temp_google_key = 'AIzaSyDEC5r_Tq31qfF8BKIdhUAH1KorOfjLV4g'
-
-    # HWBI page specifics
-    if page == 'about':
-        imports = render_to_string('disc/hwbi-disc_about-imports.html', {'API_KEY': temp_google_key})
-        body = render_to_string('disc/hwbi-disc_about.html')
-    else:
-        imports = render_to_string('disc/hwbi-disc_generic-imports.html', {'API_KEY': temp_google_key})
-        body = render_to_string('disc/hwbi-disc_search-field.html', {'LOCATION': loc})
-        if page == 'community-snapshot':
-            body += render_to_string('disc/hwbi-disc_snapshot-body.html')
+    imports, body = get_page_html(loc, page)
 
     # EPA drupal page template
     html = render_to_string('disc/drupal_2017/01epa_drupal_header.html', {})
@@ -62,9 +52,7 @@ def build_disc_page(loc, page):
 
     # HWBI page specific body
     html += body
-
     html += render_to_string('disc/drupal_2017/10epa_drupal_footer.html', {})
-
     return html
 
 
@@ -93,3 +81,23 @@ def set_menu(page):
         q_menu['additional-resources'] = 'menu_border_right'
 
     return q_menu
+
+
+def get_page_html(location, page):
+    temp_google_key = 'AIzaSyDEC5r_Tq31qfF8BKIdhUAH1KorOfjLV4g'
+    loc_obj = {}
+    if len(location) > 0:
+        loc_obj = json.loads(location['location_value'])
+
+    # HWBI page specifics
+    if page == 'about':
+        imports = render_to_string('disc/hwbi-disc_about-imports.html', {'API_KEY': temp_google_key})
+        body = render_to_string('disc/hwbi-disc_about.html')
+    elif page == 'community-snapshot':
+        imports = render_to_string('disc/hwbi-disc_snapshot-imports.html', {'API_KEY': temp_google_key})
+        body = render_to_string('disc/hwbi-disc_snapshot-search-field.html', {'LOCATION': json.dumps(loc_obj)})
+        body += render_to_string('disc/hwbi-disc_snapshot-body.html')
+    else:
+        imports = render_to_string('disc/hwbi-disc_general-imports.html', {'API_KEY': temp_google_key})
+        body = render_to_string('disc/hwbi-disc_search-field.html', {'LOCATION': json.dumps(loc_obj)})
+    return imports, body
