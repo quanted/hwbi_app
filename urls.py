@@ -42,13 +42,23 @@ urlpatterns = [
     # url(r'^rest/locations/run$', hwbi_rest_api.get_locations_run)
 
     # Django 2.0 syntax url dispatcher syntax
-    path('', hwbi.disc_page),
-    path('admin', admin.site.urls),
-    path('disc', hwbi.disc_page),
-    path('disc/<slug:page>', hwbi.disc_page),
+    # path('', hwbi.disc_page),
+    # path('admin', admin.site.urls),
+    # path('disc', hwbi.disc_page),
+    # path('disc/<slug:page>', hwbi.disc_page),
 
     # HWBI DISC rest api endpoints
-    path('disc/rest/scores', disc_api.get_disc_scores)
+    # path('disc/rest/scores', disc_api.get_disc_scores)
+
+    # Django 1.11 syntax url dispatcher syntax
+    url(r'^$', hwbi.disc_page),
+    url(r'^admin/$', admin.site.urls),
+    url(r'^disc/$', hwbi.disc_page),
+
+    # HWBI DISC rest api endpoints
+    url(r'^disc/rest/scores', disc_api.get_disc_scores),
+
+    url(r'^disc/(?P<page>.+)$', hwbi.disc_page),
 
 ]
 # else:
