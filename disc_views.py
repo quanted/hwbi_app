@@ -86,7 +86,7 @@ def set_menu(page):
 def get_page_html(location, page):
     temp_google_key = 'AIzaSyDEC5r_Tq31qfF8BKIdhUAH1KorOfjLV4g'
     loc_obj = {}
-    if len(location) > 0:
+    if 'location_value' in location:
         loc_obj = json.loads(location['location_value'])
 
     # HWBI page specifics
