@@ -97,6 +97,9 @@ def get_page_html(location, page):
         imports = render_to_string('disc/hwbi-disc_snapshot-imports.html', {'API_KEY': temp_google_key})
         body = render_to_string('disc/hwbi-disc_snapshot-search-field.html', {'LOCATION': json.dumps(loc_obj)})
         body += render_to_string('disc/hwbi-disc_snapshot-body.html')
+    elif page == 'customize':
+        imports = render_to_string('disc/hwbi-disc_customize-imports.html', {'API_KEY': temp_google_key})
+        body = render_to_string('disc/hwbi-disc_customize-body.html', {'LOCATION': json.dumps(loc_obj)})
     else:
         imports = render_to_string('disc/hwbi-disc_general-imports.html', {'API_KEY': temp_google_key})
         body = render_to_string('disc/hwbi-disc_search-field.html', {'LOCATION': json.dumps(loc_obj)})
