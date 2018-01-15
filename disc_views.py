@@ -22,9 +22,20 @@ class HWBI:
         response.write(html)
         return response
 
+    def get_disc_alt_page(self):
+        html = render_to_string('disc/hwbi-disc-alt.html', {
+            'PAGE_NAME': 'HWBI-DISC',
+            'WEB_AREA_NAME': 'QED'
+        })
+        response = HttpResponse()
+        response.write(html)
+        return response
+
 
 def build_disc_page(loc, page):
     imports, body = get_page_html(loc, page)
+    if page == 'test':
+        return body
 
     # EPA drupal page template
     html = render_to_string('disc/drupal_2017/01epa_drupal_header.html', {})
@@ -104,3 +115,4 @@ def get_page_html(location, page):
         imports = render_to_string('disc/hwbi-disc_general-imports.html', {'API_KEY': temp_google_key})
         body = render_to_string('disc/hwbi-disc_search-field.html', {'LOCATION': json.dumps(loc_obj)})
     return imports, body
+
