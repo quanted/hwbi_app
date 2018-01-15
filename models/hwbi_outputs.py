@@ -7,6 +7,8 @@ class HwbiOutputs:
 
     def __init__(self):
         self.hwbi = 0.0
+        self.statehwbi = 0.0
+        self.nationhwbi = 0.0
         self.services = list()
         self.domains = list()
 
@@ -19,6 +21,8 @@ class HwbiOutputs:
     def get_dict(self):
         dct = dict()
         dct['hwbi'] = self.hwbi
+        dct['statehwbi'] = self.statehwbi
+        dct['nationhwbi'] = self.nationhwbi
         lst_services = list()
         for service in self.services:
             lst_services.append(service.get_dict())
@@ -48,15 +52,18 @@ class ServiceOut:
 class DomainOut:
     """HWBI Domain Output"""
 
-    def __init__(self, domainID='', domainName='', description='', score=0.0, weight=0.0):
+    def __init__(self, domainID='', domainName='', description='', score=0.0, weight=0.0, stateScore=0.0, nationScore=0.0):
         self.domainID = domainID
         self.domainName = domainName
         self.description = description
         self.score = score
         self.weight = weight
+        self.stateScore = stateScore
+        self.nationScore = nationScore
 
     def reprJSON(self):
-        return dict(domainID=self.domainID, domainName=self.domainName, description=self.description, score=self.score, weight=self.weight)
+        return dict(domainID=self.domainID, domainName=self.domainName, description=self.description,
+                    score=self.score, weight=self.weight, stateScore=self.stateScore, nationScore=self.nationScore)
 
     def get_dict(self):
         return self.__dict__

@@ -60,7 +60,7 @@ def get_disc_scores(request):
 
     # build inputs
     inputs = list()
-    meta_state = MetaBase('state',value=state, description='US State')
+    meta_state = MetaBase('state', value=state, description='US State')
     meta_county = MetaBase('county', value=county, description='County')
     inputs.append(meta_state.get_dict())
     inputs.append(meta_county.get_dict())
