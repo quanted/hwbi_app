@@ -73,7 +73,7 @@ urlpatterns = [
     path('disc-alt/', hwbi.get_disc_alt_page),
 
     # HWBI DISC rest api endpoints
-    path('disc/rest/scores', disc_api.get_disc_scores)
+    path('disc/rest/scores/', disc_api.get_disc_scores)
 
     # Django 1.11 syntax url dispatcher HWBI DISC
     # url(r'^$', hwbi.disc_page),
@@ -82,7 +82,7 @@ urlpatterns = [
     # HWBI DISC rest api endpoints
     # url(r'^disc/rest/scores', disc_api.get_disc_scores),
     # url(r'^disc/(?P<page>.+)$', hwbi.disc_page),
-    # url(r'^disc-alt/%', hwbi.get_disc_alt_page)
+    # url(r'^disc-alt/$', hwbi.get_disc_alt_page)
 
 
 ]
