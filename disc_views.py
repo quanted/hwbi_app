@@ -17,7 +17,7 @@ class HWBI:
         location = {}
         for key, value in self.POST.dict().items():
             location[key] = str(value)
-        html = build_disc_page(location, page=page)
+        html = build_disc_page(request=self, loc=location, page=page)
         response = HttpResponse()
         response.write(html)
         return response
@@ -32,8 +32,8 @@ class HWBI:
         return response
 
 
-def build_disc_page(loc, page):
-    imports, body = get_page_html(loc, page)
+def build_disc_page(request, loc, page):
+    imports, body = get_page_html(request, loc, page)
     if page == 'test':
         return body
 
@@ -94,7 +94,7 @@ def set_menu(page):
     return q_menu
 
 
-def get_page_html(location, page):
+def get_page_html(request, location, page):
     temp_google_key = 'AIzaSyDEC5r_Tq31qfF8BKIdhUAH1KorOfjLV4g'
     loc_obj = {}
     if 'location_value' in location:
@@ -103,7 +103,7 @@ def get_page_html(location, page):
     # HWBI page specifics
     if page == 'about':
         imports = render_to_string('disc/hwbi-disc_about-imports.html', {'API_KEY': temp_google_key})
-        body = render_to_string('disc/hwbi-disc_about.html')
+        body = render_to_string('disc/hwbi-disc_about.html', request=request)
     elif page == 'community-snapshot':
         imports = render_to_string('disc/hwbi-disc_snapshot-imports.html', {'API_KEY': temp_google_key})
         body = render_to_string('disc/hwbi-disc_snapshot-search-field.html', {'LOCATION': json.dumps(loc_obj)})
