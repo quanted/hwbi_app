@@ -71,6 +71,7 @@ urlpatterns = [
     path('disc/<slug:page>/', hwbi.disc_page),
     path('disc/community-snapshot/', hwbi.disc_page, {'page': 'community-snapshot'}),
     path('disc-alt/', hwbi.get_disc_alt_page),
+    path('disc-app/', hwbi.disc_app_page),
 
     # HWBI DISC rest api endpoints
     path('disc/rest/scores/', disc_api.get_disc_scores)

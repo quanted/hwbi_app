@@ -31,6 +31,27 @@ class HWBI:
         response.write(html)
         return response
 
+    def disc_app_page(self):
+        temp_google_key = 'AIzaSyDEC5r_Tq31qfF8BKIdhUAH1KorOfjLV4g'
+
+        # EPA drupal page template
+        html = render_to_string('disc/drupal_2017/01epa_drupal_header.html', {})
+        html += render_to_string('disc/drupal_2017/02epa_drupal_header_bluestripe.html', {})
+
+        imports = render_to_string('disc/hwbi-disc-app-imports.html', {'API_KEY': temp_google_key})
+        html += imports
+
+        html += render_to_string('disc/drupal_2017/03epa_drupal_section_title_generic.html', {
+            'HEADER': 'Well-Being and Your Community'
+        })
+
+        body = render_to_string('disc/hwbi-disc-app-body.html')
+        html += body
+        html += render_to_string('disc/drupal_2017/10epa_drupal_footer.html', {})
+        response = HttpResponse()
+        response.write(html)
+        return response
+
 
 def build_disc_page(request, loc, page):
     imports, body = get_page_html(request, loc, page)
