@@ -8,7 +8,7 @@ class HwbiOutputs:
     def __init__(self):
         self.hwbi = 0.0
         self.statehwbi = 0.0
-        self.nationhwbi = 0.0
+        self.nationhwbi = 52.7943325
         self.services = list()
         self.domains = list()
 
