@@ -1,6 +1,8 @@
 from .domains import Domain
 from .services import Service
 from .baseline_scores import BaselineScore
+from .domain_scores_national import DomainScoresNational
+from .domain_scores_state import DomainScoresState
 
 
 def get_services():
@@ -62,6 +64,29 @@ def get_baseline_scores(state=None, county=None):
     print(query)
 
     for score in BaselineScore.objects.raw(query):
+        scores.append(score)
+
+    return scores
+
+def get_domain_scores_national():
+    scores = []
+    query = "Select * from Domains_National"
+    for score in DomainScoresNational.objects.raw(query):
+        scores.append(score)
+
+    return scores
+
+
+def get_domain_scores_state(state=None):
+    if state is None:
+        return None
+    if (not is_state_abbrev_in_list(state)):
+        return None
+
+    scores = []
+    query = "Select * from Domain_State where state = '{0}'"
+    query = query.format(state)
+    for score in DomainScoresState.objects.raw(query):
         scores.append(score)
 
     return scores
@@ -133,6 +158,14 @@ def is_state_in_list(state=None, county=None):
     """"""
     states = get_states_dict()
     if state in states.values():
+        return True
+    else:
+        return False
+
+def is_state_abbrev_in_list(state=None):
+    """"""
+    states = get_states_dict()
+    if state in states.keys():
         return True
     else:
         return False
