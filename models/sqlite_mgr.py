@@ -3,6 +3,7 @@ from .services import Service
 from .baseline_scores import BaselineScore
 from .domain_scores_national import DomainScoresNational
 from .domain_scores_state import DomainScoresState
+from .state import State
 
 
 def get_services():
@@ -84,12 +85,24 @@ def get_domain_scores_state(state=None):
         return None
 
     scores = []
-    query = "Select * from Domain_State where state = '{0}'"
+    query = "Select * from Domains_State where state = '{0}'"
     query = query.format(state)
     for score in DomainScoresState.objects.raw(query):
         scores.append(score)
 
     return scores
+
+
+def get_state_details(state=None):
+    if state is None:
+        return None
+    stateDetails = []
+    query = "Select * from States where state = '{0}'"
+    query = query.format(state)
+    for element in State.objects.raw(query):
+        stateDetails.append(element)
+    return stateDetails[0]
+
 
 def get_states_dict():
     '''Get state abbreviation and name dictionary'''

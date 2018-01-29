@@ -3,9 +3,12 @@ import json
 
 from .models.sqlite_mgr import get_domains
 from .models.sqlite_mgr import get_baseline_scores
+from .models.sqlite_mgr import get_domain_scores_national
+from .models.sqlite_mgr import get_domain_scores_state
 from .models.hwbi_calc import HWBICalc
 from .models.meta_info import MetaInfo
 from .models.meta_info import MetaBase
+from .models.sqlite_mgr import get_state_details
 
 
 def get_disc_scores(request):
@@ -16,14 +19,16 @@ def get_disc_scores(request):
     """
 
     if request.method == 'GET':
-        if 'state' not in request.GET or 'county' not in request.GET:
+        if 'state' not in request.GET or 'county' not in request.GET or 'state_abbr' not in request.GET:
             return HttpResponse(status=400)
         else:
             state = request.GET['state']
+            state_abbr = request.GET['state_abbr']
             county = request.GET['county']
     elif request.method == 'POST':
         request_data = json.loads(request.body, encoding='utf-8')
         state = request_data['state']
+        state_abbr = request.GET['state_abbr']
         county = request_data['county']
     else:
         return HttpResponse(status=404)
@@ -53,6 +58,22 @@ def get_disc_scores(request):
                      "Standards, Safety & Security, and Social Cohesion. These domains " \
                      "of well-being are then weighed based on user-supplied 'relative " \
                      "importance values' and are used to determine the overall HWBI score."
+
+    state_domains = get_domain_scores_state(state_abbr)
+    for s_domain in state_domains:
+        for domain in outputs.domains:
+            if domain.domainID == s_domain.domainID:
+                domain.stateScore = s_domain.score
+                break
+
+    nation_domains = get_domain_scores_national()
+    for n_domain in nation_domains:
+        for domain in outputs.domains:
+            if domain.domainID == n_domain.domainID:
+                domain.nationScore = n_domain.score
+                break
+
+    outputs.statehwbi = get_state_details(state).score
 
     mi.url.href = request.get_full_path()
 
