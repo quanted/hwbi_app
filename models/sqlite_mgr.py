@@ -4,6 +4,7 @@ from .baseline_scores import BaselineScore
 from .domain_scores_national import DomainScoresNational
 from .domain_scores_state import DomainScoresState
 from .state import State
+from .indicators_county import IndicatorsCounty
 
 
 def get_services():
@@ -103,6 +104,18 @@ def get_state_details(state=None):
         stateDetails.append(element)
     return stateDetails[0]
 
+
+def get_county_indicator_data(state_abbr=None, county=None):
+    if state_abbr is None or county is None:
+        return None
+    county_indicators = []
+    query = "SELECT Indicators_County.indicator, Indicators_County.score, Indicators_County.county_FIPS, Counties.county, Counties.stateID " \
+            "FROM Indicators_County INNER JOIN Counties ON Indicators_County.county_FIPS == Counties.county_FIPS " \
+            "WHERE Counties.county == '{0}' AND Counties.stateID == '{1}';"
+    query = query.format(county, state_abbr)
+    for element in IndicatorsCounty.objects.raw(query):
+        county_indicators.append(element)
+    return county_indicators
 
 def get_states_dict():
     '''Get state abbreviation and name dictionary'''

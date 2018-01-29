@@ -9,6 +9,7 @@ from .models.hwbi_calc import HWBICalc
 from .models.meta_info import MetaInfo
 from .models.meta_info import MetaBase
 from .models.sqlite_mgr import get_state_details
+from .models.sqlite_mgr import get_county_indicator_data
 
 
 def get_disc_scores(request):
@@ -49,16 +50,6 @@ def get_disc_scores(request):
     calc = HWBICalc()
     outputs = calc.hwbi_run(services, domains)
 
-    result = dict()
-    mi = MetaInfo()
-    mi.description = "The Human Well-Being Index (HWBI) model calculator (calc) " \
-                     "uses 22 economic, ecosystem, and social services values to " \
-                     "calculate eight 'domains of well-being': Connection to Nature, " \
-                     "Cultural Fulfillment, Education, Health, Leisure Time, Living " \
-                     "Standards, Safety & Security, and Social Cohesion. These domains " \
-                     "of well-being are then weighed based on user-supplied 'relative " \
-                     "importance values' and are used to determine the overall HWBI score."
-
     state_domains = get_domain_scores_state(state_abbr)
     for s_domain in state_domains:
         for domain in outputs.domains:
@@ -74,6 +65,16 @@ def get_disc_scores(request):
                 break
 
     outputs.statehwbi = get_state_details(state).score
+
+    result = dict()
+    mi = MetaInfo()
+    mi.description = "The Human Well-Being Index (HWBI) model calculator (calc) " \
+                     "uses 22 economic, ecosystem, and social services values to " \
+                     "calculate eight 'domains of well-being': Connection to Nature, " \
+                     "Cultural Fulfillment, Education, Health, Leisure Time, Living " \
+                     "Standards, Safety & Security, and Social Cohesion. These domains " \
+                     "of well-being are then weighed based on user-supplied 'relative " \
+                     "importance values' and are used to determine the overall HWBI score."
 
     mi.url.href = request.get_full_path()
 
@@ -98,3 +99,57 @@ def get_disc_scores(request):
 
     return response
 
+
+def get_indicator_scores(request):
+    if request.method == 'GET':
+        if 'county' not in request.GET or 'state_abbr' not in request.GET:
+            return HttpResponse(status=400)
+        else:
+            state_abbr = request.GET['state_abbr']
+            county = request.GET['county']
+    elif request.method == 'POST':
+        request_data = json.loads(request.body, encoding='utf-8')
+        state_abbr = request.GET['state_abbr']
+        county = request_data['county']
+    else:
+        return HttpResponse(status=404)
+
+    if state_abbr == "" or county == "":
+        return HttpResponse(status=400)
+
+    result = dict()
+    mi = MetaInfo()
+    mi.description = "The Human Well-Being Index (HWBI) model calculator (calc) " \
+                     "uses 22 economic, ecosystem, and social services values to " \
+                     "calculate eight 'domains of well-being': Connection to Nature, " \
+                     "Cultural Fulfillment, Education, Health, Leisure Time, Living " \
+                     "Standards, Safety & Security, and Social Cohesion. These domains " \
+                     "of well-being are then weighed based on user-supplied 'relative " \
+                     "importance values' and are used to determine the overall HWBI score."
+
+    mi.url.href = request.get_full_path()
+
+    result['metaInfo'] = mi.get_dict()
+
+    # build inputs
+    inputs = list()
+    meta_state = MetaBase('state', value=state_abbr, description='US State')
+    meta_county = MetaBase('county', value=county, description='County')
+    inputs.append(meta_state.get_dict())
+    inputs.append(meta_county.get_dict())
+    result['inputs'] = inputs
+    indicators = get_county_indicator_data(state_abbr=state_abbr, county=county)
+
+    response = HttpResponse()
+    try:
+        output = []
+        for indicator in indicators:
+            output.append(indicator.get_dict())
+        result['outputs'] = output
+        rslt = json.dumps(result)
+        print(rslt)
+        response.content = rslt
+    except Exception as e:
+        s = str(e)
+
+    return response
