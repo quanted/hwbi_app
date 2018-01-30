@@ -42,7 +42,7 @@ class HWBI:
         html += imports
 
         html += render_to_string('disc/drupal_2017/03epa_drupal_section_title_generic.html', {
-            'HEADER': 'Well-Being and Your Community'
+            'HEADER': 'Decision Integration for Strong Communities'
         })
 
         body = render_to_string('disc/hwbi-disc-app-body.html')
