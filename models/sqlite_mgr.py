@@ -1,6 +1,10 @@
 from .domains import Domain
 from .services import Service
 from .baseline_scores import BaselineScore
+from .domain_scores_national import DomainScoresNational
+from .domain_scores_state import DomainScoresState
+from .state import State
+from .indicators_county import IndicatorsCounty
 
 
 def get_services():
@@ -65,6 +69,53 @@ def get_baseline_scores(state=None, county=None):
         scores.append(score)
 
     return scores
+
+def get_domain_scores_national():
+    scores = []
+    query = "Select * from Domains_National"
+    for score in DomainScoresNational.objects.raw(query):
+        scores.append(score)
+
+    return scores
+
+
+def get_domain_scores_state(state=None):
+    if state is None:
+        return None
+    if (not is_state_abbrev_in_list(state)):
+        return None
+
+    scores = []
+    query = "Select * from Domains_State where state = '{0}'"
+    query = query.format(state)
+    for score in DomainScoresState.objects.raw(query):
+        scores.append(score)
+
+    return scores
+
+
+def get_state_details(state=None):
+    if state is None:
+        return None
+    stateDetails = []
+    query = "Select * from States where state = '{0}'"
+    query = query.format(state)
+    for element in State.objects.raw(query):
+        stateDetails.append(element)
+    return stateDetails[0]
+
+
+def get_county_indicator_data(state_abbr=None, county=None):
+    if state_abbr is None or county is None:
+        return None
+    county_indicators = []
+    query = "SELECT Indicators_County.indicator, Indicators_County.score, Indicators_County.county_FIPS, Counties.county, Counties.stateID " \
+            "FROM Indicators_County INNER JOIN Counties ON Indicators_County.county_FIPS == Counties.county_FIPS " \
+            "WHERE Counties.county == '{0}' AND Counties.stateID == '{1}';"
+    query = query.format(county, state_abbr)
+    for element in IndicatorsCounty.objects.raw(query):
+        county_indicators.append(element)
+    return county_indicators
 
 def get_states_dict():
     '''Get state abbreviation and name dictionary'''
@@ -133,6 +184,14 @@ def is_state_in_list(state=None, county=None):
     """"""
     states = get_states_dict()
     if state in states.values():
+        return True
+    else:
+        return False
+
+def is_state_abbrev_in_list(state=None):
+    """"""
+    states = get_states_dict()
+    if state in states.keys():
         return True
     else:
         return False
