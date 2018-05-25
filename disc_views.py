@@ -38,7 +38,10 @@ class HWBI:
         html = render_to_string('disc/drupal_2017/01epa_drupal_header.html', {})
         html += render_to_string('disc/drupal_2017/02epa_drupal_header_bluestripe.html', {})
 
-        imports = render_to_string('disc/hwbi-disc-app-imports.html', {'API_KEY': temp_google_key})
+        imports = render_to_string('disc/hwbi-disc-app-imports.html',
+                                   {
+                                       'API_KEY': temp_google_key
+                                   })
         html += imports
 
         html += render_to_string('disc/drupal_2017/03epa_drupal_section_title_generic.html', {
