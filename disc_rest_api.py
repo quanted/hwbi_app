@@ -11,6 +11,13 @@ from .models.meta_info import MetaBase
 from .models.sqlite_mgr import get_state_details
 from .models.sqlite_mgr import get_county_indicator_data
 
+from django.conf import settings
+from django.template import Context
+from django.template.loader import get_template
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
+import os
+
 
 def get_disc_scores(request):
     """
@@ -153,3 +160,48 @@ def get_indicator_scores(request):
         s = str(e)
 
     return response
+
+
+def generate_report(request):
+    """
+    Creates a pdf report from the provided post arguments.
+    :param request:
+    :return:
+    """
+    if request.method != "POST":
+        return HttpResponse(status=400)
+
+    # data = json.loads(request.body)
+    data = {}
+    html_template = 'disc/hwbi-disc-report-template.html'
+    report_name = 'disc-report.pdf'
+    response = HttpResponse(content_type="application/pdf")
+    response['Content-Disposition'] = 'attachment;filename="' + report_name + '"'
+    template = get_template(html_template)
+    html = template.render(data)
+    # html = render_to_string(html_template)
+    pisa.CreatePDF(html, dest=response, link_callback=link_callback)
+    return response
+
+
+def link_callback(uri, rel):
+    """
+    Convert HTML URIs to absolute system paths so xhtml2pdf can access those
+    resources
+    """
+
+    sUrl = settings.STATIC_URL      # Typically /static/
+    root = settings.PROJECT_ROOT   # Typically /home/userX/project_static/
+    
+    if uri.startswith(sUrl):
+        path = os.path.join(root, uri.replace(sUrl, ""))
+    else:
+        return uri
+
+    if not os.path.isfile(path):
+        path = os.getcwd() + uri
+
+    if not os.path.isfile(path):
+        raise Exception('media URI file not found. File path: ' + str(path))
+
+    return path

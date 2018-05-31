@@ -67,15 +67,16 @@ urlpatterns = [
     # Django 2.0 syntax url dispatcher HWBI DISC
     path('', hwbi.disc_page),
     path('admin/', admin.site.urls),
-    path('disc/', hwbi.disc_page),
-    path('disc/<slug:page>/', hwbi.disc_page),
-    path('disc/community-snapshot/', hwbi.disc_page, {'page': 'community-snapshot'}),
-    path('disc-alt/', hwbi.get_disc_alt_page),
-    path('disc-app/', hwbi.disc_app_page),
+    path('disc/', hwbi.disc_app_page),
+    # path('disc/<slug:page>/', hwbi.disc_page),
+    # path('disc/community-snapshot/', hwbi.disc_page, {'page': 'community-snapshot'}),
+    # path('disc-alt/', hwbi.get_disc_alt_page),
+    # path('disc-app/', hwbi.disc_app_page),
 
     # HWBI DISC rest api endpoints
     path('disc/rest/scores/', disc_api.get_disc_scores),
-    path('disc/rest/indicators/scores/', disc_api.get_indicator_scores)
+    path('disc/rest/indicators/scores/', disc_api.get_indicator_scores),
+    path('disc/rest/report/', disc_api.generate_report),
 
     # Django 1.11 syntax url dispatcher HWBI DISC
     # url(r'^$', hwbi.disc_page),
