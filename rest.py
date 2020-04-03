@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 import os
 from django.conf import settings
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 
 
 # def rest_page(request, model='hwbi', header='none'):
@@ -30,4 +30,4 @@ from django.shortcuts import render_to_response
 
 
 def rest_page(request, model='hwbi', header='none'):
-    return render_to_response('hwbi_api.html')
+    return render(request, 'hwbi_api.html')
